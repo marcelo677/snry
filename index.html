@@ -620,6 +620,8 @@ const VO=[
 ];
 
 const GUIDE={br46:6,box:4,nadi:4,scan:0,five:0,imag:0};
+/* audios de ElevenLabs disponibles en audio/<k>.mp3; el resto usa la voz del teléfono */
+const AUD=new Set([]);
 T.forEach((x,k)=>{x.vo=VO[k]||'';x.gd=3});Object.entries(GUIDE).forEach(([key,n])=>{T[IDX[key]].gd=n});
 function weave(list){const body=list.filter(k=>k!==29),out=[IDX.br46];let c=0,r=new Date().getDate();
   body.forEach((k,i)=>{out.push(k);c++;if(c%3===0&&i<body.length-1)out.push(IDX[ROT[r++%ROT.length]])});
@@ -882,8 +884,13 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function say(t,rate=.9){return new Promise(r=>{if(!VG.on||!SS||!t){r();return}let done=false;const fin=()=>{if(!done){done=true;r()}};
   try{const u=new SpeechSynthesisUtterance(t);u.lang=VG.voice?VG.voice.lang:'es-MX';if(VG.voice)u.voice=VG.voice;u.rate=rate;u.pitch=1;u.onend=fin;u.onerror=fin;SS.speak(u)}catch(e){fin()}
   setTimeout(fin,Math.max(3500,t.length*110/rate))})}
-function hush(){VG.tok++;VG.guide=0;VG.speaking=false;try{SS&&SS.cancel()}catch(e){}}
+function hush(keep){VG.tok++;VG.guide=0;VG.speaking=false;try{SS&&SS.cancel()}catch(e){}try{if(AU){AU.pause();if(!keep)AU=null}}catch(e){}}
+let AU=null;
+function playFile(x,my){return new Promise(r=>{try{if(!AU||AU.dataset.k!=x.k){if(AU)AU.pause();AU=new Audio('audio/'+x.k+'.mp3');AU.dataset.k=x.k}
+  AU.onended=()=>r(true);AU.onerror=()=>r(false);const pr=AU.play();if(pr&&pr.catch)pr.catch(()=>r(false))}catch(e){r(false)}})}
 async function narrate(x){hush();const my=VG.tok;VG.speaking=true;
+  if(AUD.has(x.k)&&VG.on){if(VG.intro){const t=VG.intro;VG.intro='';await say(t)}if(VG.tok!==my)return;
+    const ok=await playFile(x,my);if(VG.tok!==my)return;if(ok){VG.speaking=false;VG.need=false;VG.guide=x.gd*2;VG.lab='';AU=null;return}}
   const parts=((VG.intro?VG.intro+' [pausa 1] ':'')+x.vo).split(/\[pausa (\d+)\]/);VG.intro='';
   for(let i=0;i<parts.length;i++){if(VG.tok!==my)return;
     if(i%2)await wait(+parts[i]*1000);
@@ -929,7 +936,7 @@ function draw(){const x=cur(),el=x.t-left,f=Math.min(1,el/x.t);
 function stepT(){const n=Date.now(),dt=n-last;last=n;left-=dt/1000;bt+=dt;spent+=dt/1000;if(!VG.rel&&left<=10&&cur().t>=45&&!cur().mind&&VG.on){VG.rel=true;hush();say('Suelta despacio. Regresa a la quietud.',.85)}if(left<=0){left=0;draw();trackEnd(true);return}draw()}
 async function wake(on){try{if(on&&!lock&&navigator.wakeLock)lock=await navigator.wakeLock.request('screen');if(!on&&lock){lock.release();lock=null}}catch(e){}}
 function play(){if(run)return;$('upnext').hidden=true;clearInterval(cdT);run=true;last=Date.now();tick=setInterval(stepT,200);audio();wake(true);if(VG.need&&VG.on)narrate(cur());draw()}
-function pause(){run=false;clearInterval(tick);wake(false);if(VG.speaking)VG.need=true;hush();draw()}
+function pause(){run=false;clearInterval(tick);wake(false);if(VG.speaking)VG.need=true;hush(true);draw()}
 function trackEnd(full){pause();hush();VG.need=false;if(full){const d=getDone();d[cur().k]=(d[cur().k]||0)+1;store.set('snry6-done',d)}
   if(qi>=PL.length-1){gong(73,10);setTimeout(finishCard,900);return}gong();showNext()}
 function finishCard(){say('Práctica completa. Eleva la pierna veinte minutos y, si sientes calor en la rodilla, pon hielo envuelto en una toalla.');$('after').value=ans.pain;$('afterv').textContent=ans.pain;
