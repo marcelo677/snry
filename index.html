@@ -41,6 +41,8 @@ a{text-underline-offset:3px}
 .canvas{position:absolute;inset:0;max-width:560px;margin:0 auto;overflow:hidden}
 .canvas>div{position:absolute;inset:0}
 .canvas svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.canvas img,.thumb img,.fi-fig img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;pointer-events:none}
+.lay.wide{left:-10%;width:120%}
 .canvas::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 46%,rgba(230,238,250,.84) 52%,rgba(230,238,250,.9) 62%,rgba(230,238,250,.94))}
 .ui{position:absolute;inset:0;max-width:560px;margin:0 auto}
 .top{position:absolute;left:0;right:0;top:0;padding:max(12px,env(safe-area-inset-top)) 22px 0;z-index:2}
@@ -629,17 +631,20 @@ function weave(list){const body=list.filter(k=>k!==29),out=[IDX.br46];let c=0,r=
 
 /* lámina vertical para teléfono (390×844): figura entre 23% y 45% de la altura */
 const VW=390,VH=844;
+/* capas pintadas como imágenes: los filtros de acuarela se rasterizan una vez (ligero para iPhone) */
+let _FD='';const FD=()=>_FD||(_FD=document.querySelector('body>svg defs').innerHTML);
+const IMG=(cls,vb,inner,style='')=>{const [,, w,h]=vb.split(/\s+/).map(Number);return `<img class="${cls}" alt="" aria-hidden="true" decoding="async"${style?` style="${style}"`:''} src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="${vb}" preserveAspectRatio="xMidYMid slice"><defs>${FD()}</defs>${inner}</svg>`)}">`};
 function washSVG(g,k,cls='art wash',vb=`0 0 ${VW} ${VH}`){
   const p=PAL[g],w='url(#w'+(k%3)+')',sx=90+(k*53)%210,sy=120+(k*29)%70,dx=(k*37)%50;
   const dots=Array.from({length:6},(_,i)=>`<circle cx="${(k*71+i*83)%370+10}" cy="${(k*43+i*61)%170+50}" r="${2+(i*k)%4}" fill="${p[i%2?2:3]}" opacity=".55"/>`).join('');
   const strokes=[600,672,748].map((y,i)=>`<path d="M${-20+i*30} ${y+dx/3} C120 ${y-10} 260 ${y+12} ${410-i*20} ${y-4}" stroke="${p[2]}" stroke-width="${10-i*2}" fill="none" opacity=".12" stroke-linecap="round"/>`).join('');
-  return `<svg class="${cls}" viewBox="${vb}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="${VW}" height="${VH}" fill="#e6eefa"/>
+  return IMG(cls,vb,`<rect width="${VW}" height="${VH}" fill="#e6eefa"/>
   <g filter="${w}"><rect x="-30" y="-30" width="${VW+60}" height="${470+dx}" fill="${p[0]}" opacity=".9"/>
   <circle cx="${sx}" cy="${sy}" r="${62+dx/2}" fill="${p[1]}" opacity=".8"/>
   <path d="${ridge(k,336,110,58,1)}" fill="${p[2]}" opacity=".5"/>
   <path d="${ridge(k,394,50,80,7)}" fill="${p[3]}" opacity=".45"/>
   <rect x="-30" y="430" width="${VW+60}" height="${VH}" fill="${p[3]}" opacity=".16"/></g>
-  <g filter="url(#w1)">${dots}${strokes}</g><rect width="${VW}" height="${VH}" filter="url(#gr)" opacity=".3"/></svg>`;
+  <g filter="url(#w1)">${dots}${strokes}</g><rect width="${VW}" height="${VH}" filter="url(#gr)" opacity=".3"/>`);
 }
 function figSVG(k,anim=true,vb=`0 0 ${VW} ${VH}`){
   const a=ANIM[k],st=anim&&a&&a!=='sway'?`--ox:${a[0]}px;--oy:${a[1]}px;--deg:${a[2]}deg`:'';
@@ -705,14 +710,14 @@ function tdFigure(){
   </g>
   <path d="M236 346 a14 14 0 0 1 14 14" fill="none" stroke="${Ac}" stroke-width="2" stroke-dasharray="3 4" class="ds"/>`}
 function topSVG(vb,live){return `<svg class="${live?'td':''}" viewBox="${vb}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${TD_GROUND}${tdFigure()}</svg>`}
-function topScene(k){return `<svg class="lay" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${TD_GROUND}</svg>`
-   +`<svg class="lay cloud wide" viewBox="-40 0 470 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g filter="url(#w2)"><ellipse cx="110" cy="300" rx="170" ry="70" fill="#2c5fa6" opacity=".07"/><ellipse cx="360" cy="90" rx="130" ry="55" fill="#2c5fa6" opacity=".06"/><ellipse cx="300" cy="560" rx="150" ry="60" fill="#2c5fa6" opacity=".05"/></g></svg>`
-   +`<svg class="lay" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="390" height="844" filter="url(#gr)" opacity=".3"/></svg>`
+function topScene(k){return IMG('lay','0 0 390 844',TD_GROUND)
+   +IMG('lay cloud wide','-40 0 470 844',`<g filter="url(#w2)"><ellipse cx="110" cy="300" rx="170" ry="70" fill="#2c5fa6" opacity=".07"/><ellipse cx="360" cy="90" rx="130" ry="55" fill="#2c5fa6" opacity=".06"/><ellipse cx="300" cy="560" rx="150" ry="60" fill="#2c5fa6" opacity=".05"/></g>`)
+   +IMG('lay','0 0 390 844',`<rect width="390" height="844" filter="url(#gr)" opacity=".3"/>`)
    +`<div class="tdstage"><svg class="td" viewBox="40 46 310 396" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${tdFigure()}</svg></div>`
    +`<div class="tdlab"><p class="vlab"></p></div>`}
 function scene(g,k,withFig=true){if(T[k]&&T[k].vis==='top')return topScene(k);if(T[k]&&T[k].vis)withFig=false;
   const p=PAL[g],w='url(#w'+(k%3)+')',sx=90+(k*53)%210,sy=110+(k*29)%60,ox=(sx/VW*100).toFixed(1),oy=(sy/VH*100).toFixed(1);
-  const S=(cls,inner,wide)=>`<svg class="lay ${cls}${wide?' wide':''}" viewBox="${wide?'-40 0 470':'0 0 390'} ${VH}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"${cls==='sun'?` style="transform-origin:${ox}% ${oy}%"`:''}>${inner}</svg>`;
+  const S=(cls,inner,wide)=>IMG(`lay ${cls}${wide?' wide':''}`,`${wide?'-40 0 470':'0 0 390'} ${VH}`,inner,cls==='sun'?`transform-origin:${ox}% ${oy}%`:'');
   const cx=(k*67)%260+20,cy=80+(k*13)%60;
   const strokes=[600,672,748].map((y,i)=>`<path d="M${-20+i*30} ${y} C120 ${y-10} 260 ${y+12} ${410-i*20} ${y-4}" stroke="${p[2]}" stroke-width="${10-i*2}" fill="none" opacity=".12" stroke-linecap="round"/>`).join('');
   return S('sky',`<rect width="${VW}" height="${VH}" fill="#e6eefa"/><g filter="${w}"><rect x="-30" y="-30" width="${VW+60}" height="560" fill="${p[0]}" opacity=".92"/></g>`)
