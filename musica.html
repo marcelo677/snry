@@ -136,6 +136,45 @@ a{text-underline-offset:3px}
 .hmeta{font:600 15px/1.3 var(--d);color:var(--acc-t);margin:8px 0 0}
 .ttl{font:600 clamp(32px,9.4vw,42px)/1.06 var(--d);letter-spacing:-.01em;margin:0;text-wrap:balance}
 .txt{color:var(--mute);margin:10px 0 0;max-width:34ch;font-size:17.5px;line-height:1.45}
+
+/* v2 · mapa de rodilla, disciplina, clínica, ROM */
+.kmap{position:relative;width:100%;max-width:300px;height:250px;margin:10px auto 0}
+.kmap svg{position:absolute;inset:0;width:100%;height:100%}
+.kz{position:absolute;transform:translate(-50%,-50%);min-height:44px;min-width:44px;padding:0 12px;border-radius:99px;background:rgba(255,255,255,.72);border:1px solid var(--line);font-weight:600;font-size:13.5px;line-height:1.1;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:transform 160ms var(--ease-out)}
+.kz:active{transform:translate(-50%,-50%) scale(.97)}
+.kz i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--acc);flex:none}
+.kz[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}.kz[aria-pressed=true] i{background:var(--acc);border-color:var(--acc)}
+.kside{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mute);max-width:300px;margin:0 auto}
+.seg{display:flex;gap:6px;margin-top:12px}
+.seg button{flex:1;min-height:44px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-weight:600;font-size:14.5px}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.lbl{font:600 13px/1.2 var(--b,inherit);color:var(--mute);margin:16px 0 0}
+.hx{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chipb{min-height:44px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.62);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.chipb svg{width:18px;height:18px}
+.chipb[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chipb:active,.seg button:active,.ghost:active{transform:scale(.97)}
+.disc-chip{min-height:44px;padding:0 12px;border-radius:99px;font:600 14px/1 var(--d);background:rgba(255,255,255,.55);border:1px solid var(--line)}
+.alertb{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(224,96,63,.12);border:1px solid rgba(178,68,41,.35);color:#b24429;font-weight:600;font-size:15px;line-height:1.35}
+.alertb[hidden]{display:none}
+.ic.dot{position:relative}.ic.dot::after{content:'';position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--paper)}
+.tstep{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+.tstep .num{font:600 40px/1 var(--d);min-width:4.2ch;text-align:center}
+.tstep .ic{border:1px solid var(--line)}
+.tstate{font-weight:600;font-size:14.5px}
+.medrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;min-height:52px;padding:8px 0;border-bottom:1px solid var(--line)}
+.medrow .bx{width:24px;height:24px;border-radius:7px;border:1.5px solid #9dbbe0;flex:none;display:grid;place-items:center}
+.medrow[aria-pressed=true] .bx{background:var(--pr);border-color:var(--pr)}.medrow[aria-pressed=true] .bx::after{content:'';width:10px;height:6px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.medrow b{display:block;font-weight:600}.medrow span{color:var(--mute);font-size:13.5px}
+.romcard{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:rgba(255,255,255,.45)}
+.romrow{display:grid;grid-template-columns:5.6em minmax(0,1fr) 3.2em;gap:10px;align-items:center;min-height:44px}
+.romrow b{font-weight:600;font-size:14.5px}.romrow .num{font:600 18px/1 var(--d);text-align:right}
+.romrow input{width:100%}
+.romchart{width:100%;height:auto;display:block;margin-top:6px}
+.romchart text{font:500 10px/1 sans-serif;fill:var(--mute)}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btnrow .ghost{margin:0}
+.cta.sm{min-height:48px;font-size:15.5px;margin-top:10px}
 .cta{width:100%;min-height:58px;border-radius:99px;background:var(--ink);color:var(--paper);font-weight:600;font-size:17px}
 .cta:disabled{opacity:.3}
 .link{min-height:44px;width:100%;font-weight:500;color:var(--mute)}
@@ -338,6 +377,8 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
   <div class="canvas" id="hArt"></div>
   <div class="ui">
     <div class="top"><div class="home-top"><span class="date" id="hDate"></span>
+      <button class="disc-chip" id="hDisc" aria-label="Disciplina de la sesión"></button>
+      <button class="ic glass" id="openClin" aria-label="Temperatura y medicamentos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0z"/><path d="M12 9v6"/></svg></button>
       <button class="ic glass" id="openLib" aria-label="Biblioteca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
       <button class="ic glass" id="openProg" aria-label="Progreso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20c-4-2-7-5-7-9 2 0 4 1 7 4 3-3 5-4 7-4 0 4-3 7-7 9zM12 15c-1.5-2-2-4-2-6 1 .5 1.6 1.2 2 2 .4-.8 1-1.5 2-2 0 2-.5 4-2 6z"/></svg></button>
     </div></div>
@@ -345,7 +386,9 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
       <div class="body"><h1 class="ttl">Tu práctica de hoy</h1>
       <p class="hmeta" id="hKick"></p>
       <p class="why" id="hWhy"></p>
-      <div class="objs" id="hObjs"></div></div>
+      <div class="objs" id="hObjs"></div>
+      <div class="alertb" id="hAlert" role="alert" hidden></div>
+      <div class="hx"><button class="chipb" id="hNight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span id="hNightT">Rutina nocturna</span></button><button class="chipb" id="hDesk" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 20v-6h12v6M8 14V6h8v8M4 20h16"/></svg><span id="hDeskT">Alerta silla 45 min</span></button></div></div>
       <div class="end hrow" style="padding-top:16px;border-top:1px solid var(--line)">
         <div id="hLotus"></div>
         <div><div class="lv" id="hLv"></div><div class="week" id="hWeek"></div><button class="small" id="redo" style="padding:4px 0 0;text-decoration:underline">Rehacer check-in</button></div>
@@ -402,8 +445,8 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
 <!-- biblioteca -->
 <div class="sheet" id="lib" role="dialog" aria-label="Biblioteca" aria-hidden="true"><div class="sc">
   <div class="sh-top"><h2>Biblioteca</h2><button class="ic" data-close="lib" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
-  <p class="sub">30 posturas y 6 prácticas de respiración y atención plena. Toca una para practicarla o el ícono de información para leer su ficha.</p>
-  <div class="filters" id="filters"></div><div id="sci"></div><div id="tracks"></div>
+  <p class="sub">30 posturas de yoga, 8 ejercicios de fisioterapia y 6 prácticas de respiración y atención plena. Toca una para practicarla o el ícono de información para leer su ficha.</p>
+  <div class="filters" id="dfilters"></div><div class="filters" id="filters"></div><div id="sci"></div><div id="tracks"></div>
   <p class="disc">No sustituye a tu fisioterapeuta. Confirma con él cada práctica, rango y carga.</p>
 </div></div>
 
@@ -413,9 +456,19 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
   <div class="lvcard"><div id="pLotus"></div><div><div class="lv" id="pLv"></div><div class="lvbar"><i id="pBar"></i></div><div class="small" id="pTxt"></div>
     <ul class="earn"><li>1 gota por minuto</li><li>+10 por sesión</li><li>+15 si bajas la carga por escucharte</li><li>+50 por hito</li></ul></div></div>
   <div class="small" style="display:flex;align-items:center;gap:8px;margin-top:14px"><span id="gTxt" style="flex:1"></span><button class="ic" id="gMinus" aria-label="Bajar meta" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button><button class="ic" id="gPlus" aria-label="Subir meta" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div>
+  <h3 class="h3">Rango de movimiento hoy</h3><p class="sub">Mide con goniómetro o app. Extensión: grados que faltan para estirar (meta 0°).</p>
+  <div class="romcard">
+    <div class="romrow"><b>Extensión</b><input type="range" id="rExt" min="-5" max="20" step="1" value="2" aria-label="Extensión en grados"><span class="num" id="rExtV">2°</span></div>
+    <div class="romrow"><b>Flexión</b><input type="range" id="rFlx" min="30" max="140" step="1" value="100" aria-label="Flexión en grados"><span class="num" id="rFlxV">100°</span></div>
+    <div class="romrow"><b>CPM hoy</b><div style="display:flex;gap:8px;align-items:center"><button class="ic" id="rCpmM" aria-label="Menos sesiones de CPM" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button><button class="ic" id="rCpmP" aria-label="Más sesiones de CPM" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div><span class="num" id="rCpmV">0</span></div>
+    <button class="cta sm" id="rSave">Registrar medición</button>
+    <div id="romChart"></div>
+  </div>
+  <div class="btnrow"><button class="ghost" id="exportRep">Exportar reporte para médico</button></div>
   <h3 class="h3">Hitos funcionales</h3><p class="sub">Criterios clínicos para avanzar de fase. Revísalos con tu fisio.</p><div id="miles"></div>
   <h3 class="h3">Logros</h3><p class="sub">Escuchar a tu cuerpo también es avanzar.</p><div class="badges" id="badges"></div>
   <h3 class="h3">Dolor antes y después</h3><p class="sub">Azul: antes. Siena: después. Solo en este navegador.</p><div id="logrows"></div>
+  <div class="btnrow" style="margin-top:16px"><button class="ghost" id="bkExp">Exportar respaldo (.json)</button><button class="ghost" id="bkImp">Importar respaldo</button><input type="file" id="bkFile" accept="application/json,.json" hidden></div>
   <button class="ghost" id="clear">Borrar registro</button>
 </div></div>
 
@@ -423,6 +476,17 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
 <div class="sheet" id="ficha" role="dialog" aria-label="Ficha de la postura" aria-hidden="true" style="z-index:40"><div class="sc">
   <div class="sh-top"><span class="small" style="font-weight:600">Ficha de la postura</span><button class="ic" data-close="ficha" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
   <div id="fiBody"></div>
+</div></div>
+<!-- semáforo clínico -->
+<div class="sheet" id="clin" role="dialog" aria-label="Temperatura y medicamentos" aria-hidden="true" style="z-index:35"><div class="sc">
+  <div class="sh-top"><h2>Hoy, tu cuerpo</h2><button class="ic" data-close="clin" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
+  <h3 class="h3" style="margin-top:6px">Temperatura oral</h3>
+  <div class="tstep"><button class="ic" id="tMinus" aria-label="Bajar 0.1 grados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button><span class="num" id="tVal">—</span><button class="ic" id="tPlus" aria-label="Subir 0.1 grados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div>
+  <p class="tstate" id="tState"></p>
+  <button class="cta sm" id="tSave">Guardar temperatura</button>
+  <h3 class="h3">Medicamentos de hoy</h3><p class="sub">Se reinicia cada día.</p>
+  <div id="meds"></div>
+  <p class="disc">Esta lista es un recordatorio, no una indicación médica. Sigue siempre la receta y las instrucciones de tu médico.</p>
 </div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -629,6 +693,52 @@ const VO=[
 "Tu cerebro puede ensayar un movimiento antes de que la rodilla esté lista. [pausa 2] Cierra los ojos. Imagina que te pones de pie, ligero. [pausa 4] Ve tu pie izquierdo apoyarse completo en el suelo. [pausa 4] Siente cómo la rodilla se estira, sin dolor, al pasar el peso. [pausa 4] Da diez pasos en tu mente, con un ritmo tranquilo. [pausa 10] Abre los ojos. *Mi mente camina antes que yo.*"
 ];
 
+/* v2 · fisioterapia ortopédica (k 36–43) */
+const PHY=[
+ ['TKE con Banda','Extensión terminal de pie','b',90,1,0,'De pie, banda elástica detrás de la rodilla izquierda atada a un poste. Dobla la rodilla unos 30° dejando que la banda la jale y estírala por completo apretando el cuádriceps. Sostén 3 s.','La banda jala la rodilla hacia adelante y el cuádriceps responde estirándola: entrena los últimos grados de extensión en cadena cerrada, con el pie apoyado.','ext',['fza'],'Concéntrica de rango terminal','cerrada',1,'3 × 12 · 3 s','Mi rodilla encuentra su línea.'],
+ ['Spanish Squat','Isométrico descarga Hoffa','b',90,1,1,'Cinta firme detrás de ambas rodillas atada a un poste. Lleva la cadera atrás manteniendo las espinillas verticales y baja a unos 45–60°. Sostén con el peso en los talones.','Con la tibia vertical, el cuádriceps trabaja fuerte con muy poca compresión entre rótula y fémur. El isométrico baja el dolor del tendón rotuliano y de la grasa de Hoffa.','fza',['ext'],'Isométrica','cerrada',2,'3 × 25 s','Firme, sin empujar contra el dolor.'],
+ ['SLR 3 Planos','Elevación recta rotada','k',90,1,0,'Pie derecho apoyado. Activa el cuádriceps izquierdo y eleva la pierna recta en tres versiones: puntas al techo, puntas hacia afuera y puntas hacia adentro. Baja en 4 tiempos.','Cambiar la rotación de la cadera reparte el trabajo entre recto femoral, aductores y tensor de la fascia lata sin cargar la rodilla.','fza',['ext'],'Concéntrica y excéntrica','abierta',1,'3 × 8 · 4 s exc','Fuerza en todas las direcciones.'],
+ ['Step-Up Excéntrico','Descenso controlado 15 cm','b',90,1,1,'Sobre un escalón de 15 cm, de pie con la pierna izquierda. Baja el talón derecho hacia el suelo en 3 tiempos, con la rodilla izquierda alineada sobre el segundo dedo. Sube con ayuda del pasamanos.','El trabajo excéntrico controlado prepara al cuádriceps para bajar escaleras, el gesto que más carga la rodilla tras la cirugía.','fza',['eq'],'Excéntrica','cerrada',2,'3 × 8 · 3 s baja','Bajo con control, paso a paso.'],
+ ['Curl Excéntrico','Deslizamiento isquiotibial','k',90,1,1,'Boca arriba, talones sobre un trapo o deslizador. Sube la cadera en puente y deja que los talones se alejen despacio en 4 tiempos. Baja la cadera y recoge los talones con ayuda.','El isquiotibial excéntrico protege la rodilla en la marcha y calma la tensión de la corva sin traccionar el nervio ciático.','fza',['flx'],'Excéntrica','cerrada',2,'3 × 8 · 4 s exc','Suelto con fuerza, sin prisa.'],
+ ['Prensa Supina','Empuje unipodal con banda','k',90,1,0,'Boca arriba, banda en la planta del pie izquierdo sostenida con las manos. Rodilla doblada a 90°: empuja hasta estirar la pierna contra la banda y regresa lento.','Simula una prensa de pierna sin cargar la articulación con el peso del cuerpo: cuádriceps y glúteo trabajan en un rango seguro.','fza',['ext'],'Concéntrica y excéntrica','cerrada',1,'3 × 10','Empujo desde mi centro.'],
+ ['Retro-Walking','Caminata en reversa VMO','b',90,1,0,'En un pasillo despejado, camina hacia atrás en pasos cortos, apoyando primero la punta y luego todo el pie, con la rodilla que se estira al final del paso.','Caminar hacia atrás activa el vasto medial oblicuo y la extensión terminal con menos compresión rotuliana que caminar hacia adelante.','eq',['fza','ext'],'Marcha en reversa','cerrada',1,'2 × 45 s','Retrocedo para avanzar.'],
+ ['Monster Walks','Abducción cadera con banda','b',90,1,0,'Banda alrededor de los tobillos, rodillas levemente dobladas y cadera atrás. Da pasos laterales y en diagonal sin que las rodillas se junten.','El glúteo medio controla que la rodilla no caiga hacia adentro (valgo), lo que protege meniscos y rótula al caminar.','eq',['fza'],'Isométrica de cadera + marcha','cerrada',1,'3 × 10 pasos','Mis caderas sostienen mis rodillas.']
+];
+const PHY_POSE=[
+ V(160,40,104)+`<path d="M160 76 L110 79" stroke="${P}" stroke-width="3" fill="none"/>`+H(100,14)+L('100,25 100,58')+L('100,31 92,56')+L('100,31 108,56')+L('100,58 94,80 92,100')+L('100,58 108,79 104,100',A)+Ds('M122 66 L134 66'),
+ V(150,26,104)+`<path d="M150 70 L98 70" stroke="${P}" stroke-width="3" fill="none"/>`+H(86,20)+L('82,30 62,56')+L('78,37 108,46')+L('62,56 94,70 94,100')+L('62,54 98,66 98,100',A),
+ S()+RB+L('96,96 168,70 174,60',A)+Ds('M156 50 a14 14 0 0 1 24 8'),
+ R(100,84,52,18,4)+H(112,10)+L('112,21 112,46')+L('112,27 102,44')+L('112,27 124,42')+L('112,46 118,66 120,84')+L('112,46 104,70 94,98',A)+Ds('M82 86 L82 98'),
+ H(26,94)+L('36,98 96,76')+L('42,99 82,101')+L('96,76 120,66 140,98')+L('96,76 138,74 172,96',A)+R(130,98,22,5,2)+R(164,96,22,5,2)+Ds('M182 90 L194 90'),
+ S(0)+RB+L('46,95 72,88')+`<path d="M72 88 L160 58" stroke="${P}" stroke-width="3" fill="none"/>`+L('96,96 132,68 160,58',A)+Ds('M170 52 L182 46'),
+ H(100,14)+L('100,25 100,58')+L('100,31 112,52')+L('100,31 90,52')+L('100,58 106,80 108,100')+L('100,58 90,78 80,98',A)+Ds('M70 100 L54 100'),
+ H(100,22)+L('100,33 96,60')+L('99,38 118,52')+L('99,38 114,58')+L('96,60 80,78 76,100')+`<path d="M78 92 L122 92" stroke="${P}" stroke-width="3" fill="none"/>`+L('96,60 116,78 124,100',A)+Ds('M134 98 L150 98')
+];
+const PHY_ANIM=[[100,58,-4],'sway',[96,96,-8],[112,46,5],[96,76,-5],[96,96,-6],[100,58,6],'sway'];
+const PHY_SK=[
+ {sa:'TKE · Terminal Knee Extension',p:[['terminal','los últimos grados del movimiento'],['knee extension','extensión de rodilla']],m:'Ejercicio clásico de la fisioterapia deportiva. Se usa desde los primeros días tras una artroscopia porque devuelve la extensión completa de pie, el rango que más se pierde.',mu:'Cuádriceps, sobre todo el vasto medial oblicuo (VMO).',m2:'Glúteo mayor y gastrocnemio estabilizan; los isquiotibiales se alargan.'},
+ {sa:'Spanish Squat',p:[['spanish','creado por fisioterapeutas españoles'],['squat','sentadilla']],m:'Popularizado en el tratamiento de la tendinopatía rotuliana. La cinta permite cargar el cuádriceps con la tibia vertical, sin que la rodilla avance sobre los dedos.',mu:'Cuádriceps en isométrico intenso.',m2:'Glúteos, core y tibial anterior; la grasa de Hoffa queda con poca compresión.'},
+ {sa:'SLR · Straight Leg Raise',p:[['straight leg','pierna recta'],['raise','elevación'],['3 planos','neutro, rotación externa e interna']],m:'La elevación de pierna recta es la prueba y el ejercicio base tras una cirugía de rodilla: si la rodilla no se dobla al subir, el cuádriceps ya está "encendido".',mu:'Recto femoral, psoas y vasto medial; aductores en rotación externa; tensor de la fascia lata en rotación interna.',m2:'Abdominales profundos estabilizan la pelvis.'},
+ {sa:'Step-Down Excéntrico',p:[['step','escalón'],['excéntrico','el músculo trabaja mientras se alarga']],m:'Prepara para bajar escaleras. La fase excéntrica es la que más protege la articulación cuando se controla.',mu:'Cuádriceps en excéntrico y glúteo medio.',m2:'Tobillo y pie para el equilibrio; core.'},
+ {sa:'Hamstring Slider Curl',p:[['hamstring','isquiotibial, la corva'],['slider','deslizador']],m:'Una versión casera del Nordic curl: fuerte para los isquiotibiales pero con control total de la carga.',mu:'Isquiotibiales (bíceps femoral, semitendinoso, semimembranoso) y glúteo mayor.',m2:'Gastrocnemio y core.'},
+ {sa:'Supine Leg Press',p:[['supine','boca arriba'],['leg press','prensa de pierna']],m:'Reproduce el gesto de la prensa del gimnasio con una banda: el empuje es real, la carga sobre la articulación es mínima.',mu:'Cuádriceps y glúteo mayor.',m2:'Gemelos al final del empuje; aductores estabilizan.'},
+ {sa:'Retro-Walking',p:[['retro','hacia atrás'],['walking','caminar']],m:'La marcha hacia atrás se usa en rehabilitación de rodilla porque invierte la carga: más cuádriceps, menos presión bajo la rótula.',mu:'Cuádriceps (VMO) y gemelos.',m2:'Glúteos e isquiotibiales; equilibrio y propiocepción.'},
+ {sa:'Monster Walks',p:[['monster','monstruo, por la forma de caminar'],['walks','pasos']],m:'Caminar con banda en los tobillos y la cadera atrás despierta el glúteo medio, el músculo que mantiene la rodilla alineada.',mu:'Glúteo medio y glúteo menor.',m2:'Tensor de la fascia lata, cuádriceps en isométrico y core.'}
+];
+VO.push(
+ 'Banda detrás de la rodilla izquierda, de pie, con apoyo si lo necesitas. [pausa 2] Deja que la banda doble un poco la rodilla. [pausa 2] Ahora aprieta el muslo y estira la rodilla por completo. Sostén tres segundos. [pausa 3] Suelta despacio. *Mi rodilla encuentra su línea.*',
+ 'Cinta detrás de las rodillas, atada a un punto firme. [pausa 2] Lleva la cadera atrás, las espinillas verticales. [pausa 2] Baja solo hasta donde no haya pellizco y sostén. [pausa 3] Respira. El muslo arde, la rodilla está tranquila. *Firme, sin empujar contra el dolor.*',
+ 'Pie derecho apoyado. Aprieta el muslo izquierdo, puntas hacia ti. [pausa 2] Eleva la pierna recta y baja en cuatro tiempos. [pausa 3] Ahora con las puntas hacia afuera. [pausa 3] Y con las puntas hacia adentro. [pausa 2] *Fuerza en todas las direcciones.*',
+ 'De pie en el escalón sobre la pierna izquierda, con una mano en el pasamanos. [pausa 2] Baja el talón derecho hacia el suelo en tres tiempos. [pausa 3] La rodilla izquierda mira al segundo dedo. [pausa 2] Sube con ayuda y repite. *Bajo con control, paso a paso.*',
+ 'Boca arriba, talones sobre los deslizadores. [pausa 2] Sube la cadera en puente. [pausa 2] Deja que los talones se alejen despacio, en cuatro tiempos. [pausa 3] Baja la cadera y recoge los pies con calma. *Suelto con fuerza, sin prisa.*',
+ 'Banda en la planta del pie izquierdo, rodilla doblada. [pausa 2] Empuja hasta estirar la pierna. [pausa 2] Regresa lento, resistiendo la banda. [pausa 2] *Empujo desde mi centro.*',
+ 'Pasillo despejado. Camina hacia atrás en pasos cortos. [pausa 2] Apoya primero la punta y deja que la rodilla se estire al final del paso. [pausa 3] Mira hacia adelante, respira suave. *Retrocedo para avanzar.*',
+ 'Banda en los tobillos, rodillas suaves y cadera atrás. [pausa 2] Da pasos hacia el lado, sin que las rodillas se junten. [pausa 3] Ahora en diagonal. [pausa 2] *Mis caderas sostienen mis rodillas.*'
+);
+while(VO.length<T.length)VO.push('');
+PHY.forEach(([n,d,g,t,l,f,c,w,o,o2,ct,ch,ld,dose,it],i)=>{const k=T.length;T.push({k,n,d,g,t,l,f,c,w,o,o2,ct,ch,ld,dose,it,mod:'physio'});POSE[k]=PHY_POSE[i];ANIM[k]=PHY_ANIM[i];SK[k]=PHY_SK[i]});
+T.forEach(x=>{if(!x.mod)x.mod=x.mind?'mind':'yoga'});
+
 const GUIDE={br46:6,box:4,nadi:4,scan:0,five:0,imag:0};
 /* audios de ElevenLabs disponibles en audio/<k>.mp3; el resto usa la voz del teléfono */
 const AUD=new Set([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,17,20,29,30,31,32,33,34,35]);
@@ -772,10 +882,14 @@ function show(id){document.querySelectorAll('.scr:not(.player)').forEach(s=>s.cl
 
 /* check-in */
 const MOODS=['Agotado','Bajo','Tranquilo','Bien','Con energía'];
-const WHERE=['Bajo la rótula','Lado interno','Lado externo','Detrás','Ciático','Espalda baja'];
+const WHERE=['Suprarrotuliana','Bajo la rótula','Lado interno','Lado externo','Ciático / Posterior','Espalda baja'];
+const KZ=[['Suprarrotuliana','Arriba de la rótula',50,25],['Bajo la rótula','Bajo la rótula',50,60],['Lado interno','Interno',17,44],['Lado externo','Externo',83,44],['Ciático / Posterior','Detrás · ciático',50,90]];
+const DISC=[['hybrid','Híbrido'],['yoga','Yoga'],['physio','Fisio']];
+const discName=d=>(DISC.find(x=>x[0]===d)||DISC[0])[1];
+const KNEE=`<svg viewBox="0 0 300 250" aria-hidden="true"><g filter="url(#ws)"><path d="M112 0 C110 40 108 70 104 98 C98 120 98 150 106 170 C110 200 114 228 116 250 L184 250 C186 228 190 200 194 170 C202 150 202 120 196 98 C192 70 190 40 188 0 Z" fill="#9dbbe0" opacity=".45"/><ellipse cx="150" cy="120" rx="26" ry="31" fill="#e6eefa" opacity=".9"/><ellipse cx="150" cy="120" rx="26" ry="31" fill="none" stroke="rgba(19,35,58,.35)" stroke-width="2"/><path d="M138 152 C142 166 158 166 162 152" fill="none" stroke="rgba(19,35,58,.3)" stroke-width="2"/></g></svg>`;
 const TYPES=['Pellizco agudo','Sordo','Descargas','Rigidez','Hinchazón'];
 const TIMES=[[600,'10 min'],[1200,'20 min'],[1800,'30 min'],[0,'Completa']];
-let ans={mood:null,pain:2,where:[],type:[],time:null},step=0;
+let ans={mood:null,pain:2,where:[],type:[],time:null,discipline:'hybrid'},step=0;
 const prev=store.get('snry6-ci',null),today=new Date().toDateString();
 paint($('ciArt'),'r',29);
 $('ciSegs').innerHTML='<i></i>'.repeat(5);
@@ -789,48 +903,58 @@ function renderStep(){
   if(step===0)h=`<div class="body"><h1 class="ttl">${greet()}</h1><p class="txt">Cinco preguntas para adaptar tu práctica de hoy.</p></div><div class="end"><button class="cta" id="go0">Empezar</button>${prev&&prev.day===today?'<button class="link" id="same">Igual que hace un rato</button>':''}</div>`;
   if(step===1)h=`<div class="body"><h2 class="ttl">¿Cómo llegas hoy?</h2>${pills(MOODS,i=>ans.mood===i)}</div>`;
   if(step===2)h=`<div class="body"><h2 class="ttl">¿Cuánto duele la rodilla?</h2><div class="painrow"><span class="painbig" id="pv">${ans.pain}</span><span class="painlab" id="pl">${painLab(ans.pain)}</span></div><input type="range" min="0" max="10" value="${ans.pain}" id="pr" aria-label="Dolor de 0 a 10"></div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
-  if(step===3)h=`<div class="body"><h2 class="ttl">¿Dónde lo sientes?</h2>${pills(WHERE,(i,o)=>ans.where.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
+  if(step===3)h=`<div class="body"><h2 class="ttl">¿Dónde lo sientes?</h2><p class="txt" style="margin:4px 0 0;color:var(--mute);font-size:15px">Rodilla izquierda, vista de frente. Toca una o varias zonas.</p><div class="kmap" id="kmap">${KNEE}${KZ.map(([v,lab,x,y])=>`<button class="kz" data-v="${v}" style="left:${x}%;top:${y}%" aria-pressed="${ans.where.includes(v)}"><i></i>${lab}</button>`).join('')}</div>${pills(['Espalda baja'],(i,o)=>ans.where.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
   if(step===4)h=`<div class="body"><h2 class="ttl">¿Cómo se siente?</h2>${pills(TYPES,(i,o)=>ans.type.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
-  if(step===5)h=`<div class="body"><h2 class="ttl">¿Cuánto tiempo tienes?</h2>${pills(TIMES.map(t=>t[1]),i=>ans.time===i)}</div>`;
+  if(step===5)h=`<div class="body"><h2 class="ttl">¿Cuánto tiempo tienes?</h2><p class="lbl">Disciplina</p><div class="seg" id="dseg">${DISC.map(([v,n])=>`<button data-v="${v}" aria-pressed="${(ans.discipline||'hybrid')===v}">${n}</button>`).join('')}</div><p class="lbl">Duración</p>${pills(TIMES.map(t=>t[1]),i=>ans.time===i)}</div>`;
   L.innerHTML=h;L.scrollTop=0;
   if(step===0){$('go0').onclick=()=>{step=1;renderStep()};if($('same'))$('same').onclick=()=>{ans=prev.ans;finishCi()}}
   if(step===1)L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;ans.mood=+b.dataset.i;renderStep();setTimeout(()=>{step=2;renderStep()},260)};
   if(step===2){$('pr').oninput=e=>{ans.pain=+e.target.value;$('pv').textContent=ans.pain;$('pl').textContent=painLab(ans.pain)};$('nx').onclick=()=>{if(ans.pain===0){ans.where=[];step=4}else step=3;renderStep()}}
-  if(step===3||step===4){const arr=step===3?WHERE:TYPES,key=step===3?'where':'type';
+  if(step===3){L.querySelector('.body').onclick=e=>{const b=e.target.closest('.kz,.pill');if(!b)return;const v=b.classList.contains('kz')?b.dataset.v:'Espalda baja',s=ans.where,i=s.indexOf(v);i<0?s.push(v):s.splice(i,1);b.setAttribute('aria-pressed',i<0)};
+    $('nx').onclick=()=>{step++;renderStep()}}
+  if(step===4){const arr=TYPES,key='type';
     L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;const v=arr[+b.dataset.i],s=ans[key],i=s.indexOf(v);i<0?s.push(v):s.splice(i,1);b.setAttribute('aria-pressed',i<0)};
     $('nx').onclick=()=>{step++;renderStep()}}
-  if(step===5)L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;ans.time=+b.dataset.i;renderStep();setTimeout(finishCi,300)};
+  if(step===5){$('dseg').onclick=e=>{const b=e.target.closest('button');if(!b)return;ans.discipline=b.dataset.v;[...$('dseg').children].forEach(x=>x.setAttribute('aria-pressed',x===b))};
+    L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;ans.time=+b.dataset.i;renderStep();setTimeout(finishCi,300)}}
 }
 $('ciBack').onclick=()=>{if(step>0){step=step===4&&ans.pain===0?2:step-1;renderStep()}};
 function finishCi(){store.set('snry6-ci',{day:today,ans});build();
   renderHome();show('s-home')}
-$('redo').onclick=()=>{step=0;ans={mood:null,pain:ans.pain,where:[],type:[],time:null};renderStep();show('s-ci')};
+$('redo').onclick=()=>{step=0;ans={mood:null,pain:ans.pain,where:[],type:[],time:null,discipline:ans.discipline||'hybrid'};renderStep();show('s-ci')};
 
 /* motor adaptativo */
 let mode='full',listen=false,Q=[],why='';
 const MODE={full:'completa',gentle:'suave',rest:'de descanso'};
-const off=k=>T[k].mind?false:mode==='rest'?![0,14,29].includes(k):mode==='gentle'?!!T[k].l:false;
+let BLOCK=new Set();
+const off=k=>T[k].mind?false:BLOCK.has(k)?true:mode==='rest'?![0,14,29].includes(k):mode==='gentle'?!!T[k].l:false;
 function build(){
   const p=ans.pain,ty=ans.type,wh=ans.where,mood=ans.mood??2;
   const pinch=ty.includes('Pellizco agudo'),zap=ty.includes('Descargas'),swell=ty.includes('Hinchazón'),stiff=ty.includes('Rigidez'),dull=ty.includes('Sordo');
   mode=p>=7||(pinch&&wh.includes('Bajo la rótula'))?'rest':(p>=4||pinch||zap||swell||mood===0)?'gentle':'full';
+  const supra=wh.includes('Suprarrotuliana')&&swell,hoffa=wh.includes('Bajo la rótula')&&pinch,disc=ans.discipline||'hybrid';
+  if(supra&&mode==='full')mode='gentle';
+  BLOCK=new Set(hoffa?[8,37,39]:[]);
   listen=mode!=='full';
   const W={ext:3,fza:3,edm:2,flx:2,neu:1,mov:1,eq:1,pos:1,cal:1},r=[];
   if(swell){W.edm+=4;r.push('drenaje')}
-  if(zap||wh.includes('Ciático')||wh.includes('Espalda baja')){W.neu+=4;W.mov+=1;r.push('el nervio')}
+  if(zap||wh.includes('Ciático')||wh.includes('Ciático / Posterior')||wh.includes('Espalda baja')){W.neu+=4;W.mov+=1;r.push('el nervio')}
   if(stiff){W.flx+=2;W.ext+=2;W.mov+=1;r.push('el rango')}
-  if(wh.includes('Detrás')){W.ext+=1;W.neu+=1}
+  if(wh.includes('Detrás')||wh.includes('Ciático / Posterior')){W.ext+=1;W.neu+=1}
+  if(supra){W.edm+=4;if(!r.includes('drenaje'))r.push('drenaje')}
   if(dull){W.edm+=1;W.cal+=1}
   if(mood<=1){W.cal+=3;W.fza-=1;r.push('la calma')}
   if(mood===4&&p<=2){W.fza+=2;W.eq+=2;r.push('fuerza y equilibrio')}
-  const pool=T.filter(x=>!x.mind&&!off(x.k)),budget=Math.round(TIMES[ans.time??3][0]*.78);
+  const inDisc=x=>disc==='yoga'?x.mod==='yoga':disc==='physio'?(x.mod==='physio'||[0,29].includes(x.k)):x.mod!=='mind';
+  const pool=T.filter(x=>!x.mind&&!off(x.k)&&!(supra&&x.l===1)&&inDisc(x)),budget=Math.round(TIMES[ans.time??3][0]*.78);
   if(!budget||mode==='rest')Q=pool.map(x=>x.k);
   else{const sc=x=>W[x.o]*2+x.o2.reduce((s,o)=>s+W[o],0)+(x.f?-2:0);
     const fixed=[0,29].filter(k=>!off(k));let tot=fixed.reduce((s,k)=>s+T[k].t,0);const pick=new Set(fixed);
     pool.filter(x=>!pick.has(x.k)).sort((a,b)=>sc(b)-sc(a)||a.k-b.k).forEach(x=>{if(tot+x.t<=budget){pick.add(x.k);tot+=x.t}});
     Q=[...pick].sort((a,b)=>a-b)}
+  if(supra){Q=Q.filter(k=>k!==0&&k!==14);Q=[0,14,...Q]}
   Q=weave(Q);
-  why=mode==='rest'?'Hoy el cuerpo pide pausa. Moverte poco también es avanzar.':(mode==='gentle'?'Sin prácticas con carga.':'Busca ardor muscular, nunca dolor articular.')+(r.length&&mode!=='rest'?' Cuidamos '+r.slice(0,2).join(' y ')+'.':'');
+  why=(supra?'Rodilla hinchada arriba de la rótula: hoy drenaje primero y nada con carga. ':'')+(hoffa?'Pellizco bajo la rótula: sin sentadillas ni escalón. ':'')+(supra?(r.length>1?'Cuidamos '+r.filter(x=>x!=='drenaje').slice(0,1).join('')+' también.':''):mode==='rest'?'Hoy el cuerpo pide pausa. Moverte poco también es avanzar.':(mode==='gentle'?'Sin prácticas con carga.':'Busca ardor muscular, nunca dolor articular.')+(r.length&&mode!=='rest'?' Cuidamos '+r.slice(0,2).join(' y ')+'.':''));
 }
 
 /* inicio */
@@ -851,23 +975,99 @@ function renderHome(){
   $('hLotus').innerHTML=lotus(s.lv);$('hLv').textContent=`${LV[s.lv][1]} · ${s.drops} gotas`;
   const ws=weekStart(),days=new Set(s.log.filter(e=>new Date(e.d)>=ws).map(e=>(new Date(e.d).getDay()+6)%7)),td=(new Date().getDay()+6)%7;
   $('hWeek').innerHTML=[0,1,2,3,4,5,6].map(i=>`<i class="${days.has(i)?'on':''}${i===td?' today':''}"></i>`).join('');
-  $('hPlay').innerHTML=ICON.play;$('hPlay').disabled=!Q.length;
+  $('hPlay').innerHTML=ICON.play;$('hPlay').disabled=!Q.length||clinAlert();
+  $('hDisc').textContent=discName(ans.discipline);
+  const al=clinAlert();$('hAlert').hidden=!al;$('hAlert').textContent=al?'Temperatura ≥ 38.0 °C detectada. No entrenes hoy: eleva la pierna, aplica hielo y contacta al Dr. Axotla.':'';
+  $('openClin').classList.toggle('dot',al||medsPending());$('hNight').disabled=al;
+  $('hNightT').textContent='Rutina nocturna · '+mins(NIGHT.reduce((a,k)=>a+T[k].t,0));
 }
 $('hPlay').onclick=()=>openPlayer(Q.slice(),0,'Tu práctica de hoy');
+const NIGHT=[0,1,20,29];
+$('hNight').onclick=()=>openPlayer(NIGHT.slice(),0,'Protocolo nocturno');
+$('hDisc').onclick=()=>{const i=DISC.findIndex(d=>d[0]===(ans.discipline||'hybrid'));ans.discipline=DISC[(i+1)%DISC.length][0];const ci=store.get('snry6-ci',null);if(ci&&ci.day===today){ci.ans=ans;store.set('snry6-ci',ci)}build();renderHome();toast('Sesión '+discName(ans.discipline).toLowerCase())};
+
+/* v2 · semáforo clínico: temperatura y medicamentos (se reinicia cada día) */
+const MEDS=[['tiazopir_am','Tiazopir 10 mg','En ayunas, mañana'],['abx_am','Ciprofloxacino 250 mg + TMP/SMX','Mañana'],['abx_pm','Ciprofloxacino 250 mg + TMP/SMX','Noche, 12 h después']];
+function getMeds(){const d=new Date().toDateString();let m=store.get('snry6-meds',null);if(!m||m.day!==d){m={day:d,temp:null,doses:{}};MEDS.forEach(([k])=>m.doses[k]=false);store.set('snry6-meds',m)}return m}
+const clinAlert=()=>{const t=getMeds().temp;return t!=null&&+t>=38};
+const medsPending=()=>{const m=getMeds(),h=new Date().getHours();return (!m.doses.tiazopir_am||!m.doses.abx_am)&&h>=9||!m.doses.abx_pm&&h>=21};
+let tDraft=36.6;
+function tLabel(t){return t>=38?['Fiebre: no entrenes hoy. Eleva la pierna, aplica hielo y contacta al Dr. Axotla.','#b24429']:t>=37.5?['Febrícula: sesión suave y vuelve a medir en unas horas.','#a1611f']:['Temperatura normal.','#2c5fa6']}
+function renderClin(){const m=getMeds();if(m.temp!=null)tDraft=+m.temp;
+  $('tVal').textContent=tDraft.toFixed(1)+'°';const [txt,c]=tLabel(tDraft);$('tState').textContent=(m.temp==null?'Sin registro hoy. ':'')+txt;$('tState').style.color=c;
+  $('meds').innerHTML=MEDS.map(([k,n,w])=>`<button class="medrow" data-k="${k}" aria-pressed="${!!m.doses[k]}"><span class="bx"></span><span><b>${n}</b><span>${w}</span></span></button>`).join('')}
+$('openClin').onclick=()=>{renderClin();openSheet('clin')};
+$('tMinus').onclick=()=>{tDraft=Math.max(35,Math.round((tDraft-.1)*10)/10);$('tVal').textContent=tDraft.toFixed(1)+'°';const [t,c]=tLabel(tDraft);$('tState').textContent=t;$('tState').style.color=c};
+$('tPlus').onclick=()=>{tDraft=Math.min(41,Math.round((tDraft+.1)*10)/10);$('tVal').textContent=tDraft.toFixed(1)+'°';const [t,c]=tLabel(tDraft);$('tState').textContent=t;$('tState').style.color=c};
+$('tSave').onclick=()=>{const m=getMeds();m.temp=tDraft;store.set('snry6-meds',m);renderClin();renderHome();toast(tDraft>=38?'Fiebre registrada: hoy toca descanso':'Temperatura guardada')};
+$('meds').onclick=e=>{const b=e.target.closest('.medrow');if(!b)return;const m=getMeds();m.doses[b.dataset.k]=!m.doses[b.dataset.k];store.set('snry6-meds',m);b.setAttribute('aria-pressed',m.doses[b.dataset.k]);renderHome()};
+
+/* v2 · alerta de silla */
+let deskT=null;
+function deskSet(on){const d={deskAlertMin:45,...store.get('snry6-desk',{}),active:on};store.set('snry6-desk',d);clearInterval(deskT);deskT=null;
+  if(on)deskT=setInterval(()=>{audio();gong(196,3);toast('45 min sentado: sube la pierna izquierda y haz 20 bombeos de tobillo');try{navigator.vibrate&&navigator.vibrate([120,80,120])}catch(e){}},(d.deskAlertMin||45)*60000);
+  $('hDesk').setAttribute('aria-pressed',on);$('hDeskT').textContent=on?'Alerta silla activa':'Alerta silla 45 min'}
+$('hDesk').onclick=()=>{const on=$('hDesk').getAttribute('aria-pressed')!=='true';audio();deskSet(on);toast(on?'Te aviso cada 45 min sentado':'Alerta de silla apagada')};
+deskSet(!!store.get('snry6-desk',{}).active);
+
+/* v2 · rango de movimiento (ROM) y CPM */
+const getRom=()=>store.get('snry6-rom',[]);
+let cpm=0;
+function romInit(){const r=getRom(),t=new Date().toDateString(),last=r[r.length-1];
+  if(last){$('rExt').value=last.ext;$('rFlx').value=last.flx}cpm=last&&new Date(last.d).toDateString()===t?+last.cpm||0:0;romSync()}
+function romSync(){$('rExtV').textContent=$('rExt').value+'°';$('rFlxV').textContent=$('rFlx').value+'°';$('rCpmV').textContent=cpm;romChart()}
+$('rExt').oninput=romSync;$('rFlx').oninput=romSync;
+$('rCpmM').onclick=()=>{cpm=Math.max(0,cpm-1);romSync()};$('rCpmP').onclick=()=>{cpm=Math.min(5,cpm+1);romSync()};
+$('rSave').onclick=()=>{const r=getRom(),ci=store.get('snry6-ci',null),a=ci&&ci.day===new Date().toDateString()?ci.ans:ans;
+  r.push({d:new Date().toISOString(),ext:+$('rExt').value,flx:+$('rFlx').value,cpm,swelling:(a.where||[]).includes('Suprarrotuliana')&&(a.type||[]).includes('Hinchazón')?'suprapatellar':''});
+  store.set('snry6-rom',r.slice(-200));romSync();toast('Medición guardada')};
+function romChart(){const r=getRom().slice(-14);if(!r.length){$('romChart').innerHTML='<p class="sub" style="margin:10px 0 0">Registra tu primera medición para ver la curva.</p>';return}
+  const W=320,mk=(key,lo,hi,goals,col,lab)=>{const H=110,x=i=>r.length<2?W/2:14+i*(W-28)/(r.length-1),y=v=>8+(hi-v)/(hi-lo)*(H-20);
+    const pts=r.map((e,i)=>`${x(i).toFixed(1)},${y(e[key]).toFixed(1)}`).join(' ');
+    return `<svg class="romchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${lab}: ${r.map(e=>e[key]+'°').join(', ')}">${goals.map(g=>`<line x1="0" x2="${W}" y1="${y(g)}" y2="${y(g)}" stroke="rgba(19,35,58,.18)" stroke-dasharray="3 4"/><text x="${W-2}" y="${y(g)-3}" text-anchor="end">${g}°</text>`).join('')}<text x="2" y="10">${lab}</text><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>${r.map((e,i)=>`<circle cx="${x(i)}" cy="${y(e[key])}" r="3" fill="${col}"/>`).join('')}</svg>`};
+  $('romChart').innerHTML=mk('flx',30,140,[90,120],'#2c5fa6','Flexión')+mk('ext',20,-5,[0],'#e0603f','Extensión (grados que faltan)')}
+
+/* v2 · reporte para el médico */
+function report(){const now=new Date(),wk=new Date(now-7*864e5),log=getLog().filter(e=>new Date(e.d)>=wk),rom=getRom(),last=rom[rom.length-1],mi=getMiles(),m=getMeds();
+  const avg=a=>a.length?(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):'—';
+  const swDays=new Set([...log.filter(e=>(e.wh||[]).includes('Suprarrotuliana')&&(e.ty||[]).includes('Hinchazón')).map(e=>new Date(e.d).toDateString()),...rom.filter(e=>e.swelling&&new Date(e.d)>=wk).map(e=>new Date(e.d).toDateString())]);
+  const f=d=>new Date(d).toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+  return ['SNRY · Reporte de rehabilitación (rodilla izquierda)','Fecha: '+now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'',
+    'Últimos 7 días','• Sesiones: '+log.length+(log.length?' ('+log.reduce((s,e)=>s+(+e.m||0),0)+' min en total)':''),
+    '• Dolor promedio antes de la sesión: '+avg(log.map(e=>+e.before||0))+'/10','• Dolor promedio después: '+avg(log.map(e=>+e.after||0))+'/10',
+    '• Días con hinchazón arriba de la rótula: '+swDays.size,'',
+    'Rango de movimiento',last?'• Último registro ('+f(last.d)+'): extensión '+last.ext+'° (meta 0°) · flexión '+last.flx+'° · CPM '+(last.cpm||0)+' sesiones':'• Sin registros todavía',
+    rom.length>1?'• Primer registro ('+f(rom[0].d)+'): extensión '+rom[0].ext+'° · flexión '+rom[0].flx+'°':'','',
+    'Hitos funcionales alcanzados',...(Object.keys(mi).length?Object.keys(mi).map(i=>'• '+MILES[i][0]+' ('+f(mi[i])+')'):['• Ninguno todavía']),'',
+    'Hoy','• Temperatura: '+(m.temp!=null?(+m.temp).toFixed(1)+' °C':'sin registro'),'• Medicamentos tomados: '+MEDS.filter(([k])=>m.doses[k]).map(x=>x[1]+' ('+x[2].toLowerCase()+')').join(', ')||'• Medicamentos tomados: ninguno registrado'
+  ].filter((l,i,a)=>!(l===''&&a[i-1]==='')).join('\n')}
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}}
+$('exportRep').onclick=async()=>{const t=report(),ok=await copyText(t);if(ok)toast('Reporte copiado para enviar a tu médico');else if(navigator.share)navigator.share({text:t}).catch(()=>{});else toast('No se pudo copiar el reporte')};
+
+/* v2 · respaldo JSON */
+$('bkExp').onclick=()=>{const o={app:'SNRY',v:2,date:new Date().toISOString(),data:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^snry/.test(k))o.data[k]=localStorage.getItem(k)}
+  const b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='snry-respaldo-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('Respaldo descargado')};
+$('bkImp').onclick=()=>$('bkFile').click();
+$('bkFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text()),d=o&&o.data;if(!d||typeof d!=='object')throw 0;let n=0;Object.entries(d).forEach(([k,v])=>{if(/^snry/.test(k)&&typeof v==='string'){localStorage.setItem(k,v);n++}});
+  goal=Math.min(7,Math.max(1,+store.get('snry6-goal',5)||5));renderProg();romInit();renderHome();toast(n+' registros restaurados')}catch(err){toast('Ese archivo no es un respaldo de SNRY')}e.target.value=''};
+
 
 /* hojas */
 function openSheet(id){$(id).classList.add('open');$(id).setAttribute('aria-hidden','false');$(id).scrollTop=0}
 function closeSheet(id){$(id).classList.remove('open');$(id).setAttribute('aria-hidden','true')}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheet(b.dataset.close));
-let flt='all';
+let flt='all',dflt='all';const DF=[['all','Todas'],['yoga','Yoga'],['physio','Fisio'],['mind','Mente']];
+const libList=()=>T.filter(x=>(dflt==='all'||x.mod===dflt)&&(flt==='all'||x.o===flt||x.o2.includes(flt)));
 function renderLib(){const done=getDone();
+  $('dfilters').innerHTML=DF.map(([v,n])=>`<button data-d="${v}" aria-pressed="${dflt===v}">${n}</button>`).join('');
   $('filters').innerHTML=`<button data-g="all" aria-pressed="${flt==='all'}">Todas</button>`+Object.keys(O).map(g=>`<button data-g="${g}" aria-pressed="${g===flt}" style="--c:${O[g].c}"><i></i>${O[g].n}</button>`).join('');
   $('sci').innerHTML=flt==='all'?'':`<div class="sci" style="--c:${O[flt].c}">${O[flt].s}</div>`;
-  $('tracks').innerHTML=T.filter(x=>flt==='all'||x.o===flt||x.o2.includes(flt)).map(x=>{const n=done[x.k]||0,m=n>=10?3:n>=5?2:n>=1?1:0;
-    return `<div class="trow"><button class="track${off(x.k)?' off':''}" data-k="${x.k}"><span class="thumb">${thumb(x.k)}</span><span class="t"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="tg"><span class="o" style="--c:${O[x.o].c}"><i></i>${O[x.o].n}</span><span>${fmt(x.t)}</span><span class="mast">${[0,1,2].map(i=>`<i class="${i<m?'on':''}"></i>`).join('')}</span>${x.f?'<span class="flag">fisio</span>':''}</span></span></button><button class="ic info" data-i="${x.k}" aria-label="Ficha de ${esc(x.n)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button></div>`}).join('')}
+  $('tracks').innerHTML=libList().map(x=>{const n=done[x.k]||0,m=n>=10?3:n>=5?2:n>=1?1:0;
+    return `<div class="trow"><button class="track${off(x.k)?' off':''}" data-k="${x.k}"><span class="thumb">${thumb(x.k)}</span><span class="t"><span class="n">${esc(x.n)}</span><span class="d">${esc(x.d)}</span><span class="tg"><span class="o" style="--c:${O[x.o].c}"><i></i>${O[x.o].n}</span><span>${fmt(x.t)}</span><span class="mast">${[0,1,2].map(i=>`<i class="${i<m?'on':''}"></i>`).join('')}</span>${x.mod==='physio'?'<span class="flag">fisio</span>':''}${x.f?'<span class="flag">con tu fisio</span>':''}</span></span></button><button class="ic info" data-i="${x.k}" aria-label="Ficha de ${esc(x.n)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button></div>`}).join('')}
 $('filters').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;flt=b.dataset.g;renderLib()};
+$('dfilters').onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;dflt=b.dataset.d;renderLib()};
 $('tracks').onclick=e=>{const inf=e.target.closest('.info');if(inf){openFicha(+inf.dataset.i);return}const b=e.target.closest('.track');if(!b)return;
-  const k=+b.dataset.k,list=T.filter(x=>(flt==='all'||x.o===flt||x.o2.includes(flt))&&!off(x.k)).map(x=>x.k),i=list.indexOf(k);
+  const k=+b.dataset.k,list=libList().filter(x=>!off(x.k)).map(x=>x.k),i=list.indexOf(k);
   closeSheet('lib');i<0?openPlayer([k],0,'Biblioteca'):openPlayer(list,i,flt==='all'?'Biblioteca':O[flt].n)};
 $('openLib').onclick=()=>{renderLib();openSheet('lib')};
 function fichaHTML(k,fig){const x=T[k],d=SK[k],o=O[x.o];
@@ -893,7 +1093,7 @@ function renderProg(){const s=stats(),cur=LV[s.lv],nx=LV[s.lv+1],pct=nx?(s.drops
   $('miles').innerHTML=MILES.map((m,i)=>`<button class="mile${s.mi[i]?' on':''}" data-i="${i}" aria-pressed="${!!s.mi[i]}"><span class="bx"></span><span><b>${m[0]}</b><span>${m[1]}${s.mi[i]?' · '+esc(new Date(s.mi[i]).toLocaleDateString('es-MX',{day:'numeric',month:'short'})):''}</span></span></button>`).join('');
   $('logrows').innerHTML=s.log.length?s.log.map(e=>`<div class="lrow"><span>${esc(new Date(e.d).toLocaleDateString('es-MX',{day:'numeric',month:'short'}))}<br><span class="small">${esc(e.mode)} · ${+e.m||0} min</span></span><div><div class="meter a"><i style="width:${(+e.before||0)*10}%"></i></div><div class="meter"><i style="width:${(+e.after||0)*10}%"></i></div></div><span class="num">${+e.before||0} → ${+e.after||0}</span></div>`).join(''):'<p class="sub">Aún no hay sesiones. Guarda una para regar tu loto.</p>'}
 function celebrate(before){unlocked(stats()).filter(b=>!before.includes(b)).forEach((b,i)=>setTimeout(()=>{toast('Nuevo logro: '+b);gong(196,3)},i*3400))}
-$('openProg').onclick=()=>{renderProg();openSheet('prog')};
+$('openProg').onclick=()=>{renderProg();romInit();openSheet('prog')};
 $('miles').onclick=e=>{const b=e.target.closest('.mile');if(!b)return;const bef=unlocked(stats()),mi=getMiles(),i=b.dataset.i;if(mi[i])delete mi[i];else{mi[i]=new Date().toISOString();toast('Hito alcanzado: +50 gotas')}store.set('snry6-miles',mi);renderProg();renderHome();celebrate(bef)};
 $('gMinus').onclick=()=>{goal=Math.max(1,goal-1);store.set('snry6-goal',goal);renderProg()};
 $('gPlus').onclick=()=>{goal=Math.min(7,goal+1);store.set('snry6-goal',goal);renderProg()};
@@ -928,7 +1128,7 @@ async function narrate(x){hush();const my=VG.tok;VG.speaking=true;
   if(VG.tok===my){VG.speaking=false;VG.need=false;VG.guide=x.gd*2;VG.lab=''}}
 function voiceUI(){const b=$('plVoice'),on=AMODE==='musica'?MUS.on:VG.on;b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',AMODE==='musica'?(on?'Silenciar música':'Activar música'):(on?'Silenciar voz guía':'Activar voz guía'));
   b.innerHTML=on?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>'}
-function openPlayer(list,i,from){VG.intro=mode==='gentle'?'Hoy vamos con suavidad. Escuchar también es parte del tratamiento.':mode==='rest'?'Hoy el cuerpo pide pausa. Moverte poco también es avanzar.':'';voiceUI();PL=list;qi=i;spent=0;audio();$('plFrom').textContent=from;segs();
+function openPlayer(list,i,from){if(clinAlert()){toast('Temperatura ≥ 38 °C: hoy no entrenes. Contacta a tu médico.');renderHome();return}VG.intro=mode==='gentle'?'Hoy vamos con suavidad. Escuchar también es parte del tratamiento.':mode==='rest'?'Hoy el cuerpo pide pausa. Moverte poco también es avanzar.':'';voiceUI();PL=list;qi=i;spent=0;audio();$('plFrom').textContent=from;segs();
   $('player').classList.add('on');$('finish').hidden=true;$('upnext').hidden=true;load();play()}
 const segs=()=>{$('psegs').innerHTML=PL.map(()=>'<i><b></b></i>').join('')};
 function closePlayer(){pause();musStop();hush();clearInterval(cdT);$('player').classList.remove('on');renderHome()}
@@ -1004,7 +1204,7 @@ $('after').oninput=()=>$('afterv').textContent=$('after').value;
 $('ice').onclick=()=>{audio();if(iceT){clearInterval(iceT);iceT=null;$('ice').textContent='Seguir '+fmt(ice);return}
   let l=Date.now();iceT=setInterval(()=>{const n=Date.now();ice-=(n-l)/1000;l=n;if(ice<=0){ice=0;clearInterval(iceT);iceT=null;gong(73,10);say('Listo. Tu rodilla descansó. Hasta mañana.');$('ice').textContent='Hielo listo'}else $('ice').textContent='Pausa '+fmt(ice)},250)};
 $('save').onclick=()=>{const bef=unlocked(stats()),log=getLog(),m=Math.round(spent/60);
-  log.unshift({d:new Date().toISOString(),mode:MODE[mode],before:ans.pain,after:+$('after').value,n:PL.length,m,listen,mood:MOODS[ans.mood??2]});store.set('snry6-log',log.slice(0,120));
+  log.unshift({d:new Date().toISOString(),mode:MODE[mode],before:ans.pain,after:+$('after').value,n:PL.length,m,listen,mood:MOODS[ans.mood??2],wh:ans.where.slice(),ty:ans.type.slice(),disc:ans.discipline||'hybrid'});store.set('snry6-log',log.slice(0,120));
   toast(`+${m+10+(listen?15:0)} gotas para tu loto`);setTimeout(()=>{closePlayer();setTimeout(()=>celebrate(bef),700)},600)};
 
 paint($('spArt'),'k',3,false);$('spMark').innerHTML=`<svg class="lotus" viewBox="0 0 200 170" aria-hidden="true"><g filter="url(#ws)"><ellipse cx="100" cy="150" rx="86" ry="9" fill="#9dbbe0" opacity=".6"/><ellipse cx="100" cy="158" rx="54" ry="5" fill="#9dbbe0" opacity=".5"/>
