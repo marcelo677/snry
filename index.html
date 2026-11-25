@@ -621,7 +621,7 @@ const VO=[
 
 const GUIDE={br46:6,box:4,nadi:4,scan:0,five:0,imag:0};
 /* audios de ElevenLabs disponibles en audio/<k>.mp3; el resto usa la voz del teléfono */
-const AUD=new Set([0,1,2,3,4,5,6,14,29,30]);
+const AUD=new Set([0,1,2,3,4,5,6,7,14,29,30,31,32,33,34,35]);
 T.forEach((x,k)=>{x.vo=VO[k]||'';x.gd=3});Object.entries(GUIDE).forEach(([key,n])=>{T[IDX[key]].gd=n});
 function weave(list){const body=list.filter(k=>k!==29),out=[IDX.br46];let c=0,r=new Date().getDate();
   body.forEach((k,i)=>{out.push(k);c++;if(c%3===0&&i<body.length-1)out.push(IDX[ROT[r++%ROT.length]])});
@@ -919,8 +919,8 @@ function draw(){const x=cur(),el=x.t-left,f=Math.min(1,el/x.t);
   if(ph<B[0]){lab='Inhala';rem=B[0]-ph;st='in';fp=ph/B[0]}else if(ph<B[0]+B[1]){lab='Sostén';rem=B[0]+B[1]-ph;st='hin';fp=(ph-B[0])/B[1]}else if(ph<B[0]+B[1]+B[2]){lab='Exhala';rem=B[0]+B[1]+B[2]-ph;st='out';fp=(ph-B[0]-B[1])/B[2]}else{lab='Sostén';rem=cyc-ph;st='hout';fp=(ph-B[0]-B[1]-B[2])/B[3]}
   const br=st==='in'||st==='hin'?'in':'out';
   if(run){if(art.dataset.br!==br)art.dataset.br=br;$('bwT').textContent=lab;$('bwN').textContent=Math.ceil(rem)}
-  if(run&&VG.on&&VG.guide>0&&!VG.speaking&&lab!==VG.lab&&rem>B[0]*.6-0.01){VG.lab=lab;VG.guide--;say(lab,.8)}
   else{delete art.dataset.br;$('bwT').textContent='En pausa';$('bwN').textContent=''}
+  if(run&&VG.on&&VG.guide>0&&!VG.speaking&&lab!==VG.lab&&rem>B[0]*.6-0.01){VG.lab=lab;VG.guide--;say(lab,.8)}
   const v=x.vis,lay=art.lastElementChild;$('bword').hidden=!!v;$('plInt').hidden=!!v;
   if(v&&lay){const vl=lay.querySelector('.vlab');
     if((v==='orb'||v==='top')&&vl)vl.innerHTML=run?`${lab}<small>${Math.ceil(rem)}</small>`:'En pausa';
