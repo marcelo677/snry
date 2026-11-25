@@ -621,7 +621,7 @@ const VO=[
 
 const GUIDE={br46:6,box:4,nadi:4,scan:0,five:0,imag:0};
 /* audios de ElevenLabs disponibles en audio/<k>.mp3; el resto usa la voz del teléfono */
-const AUD=new Set([0,1,2,3,4,5,6,7,14,29,30,31,32,33,34,35]);
+const AUD=new Set([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,17,20,29,30,31,32,33,34,35]);
 T.forEach((x,k)=>{x.vo=VO[k]||'';x.gd=3});Object.entries(GUIDE).forEach(([key,n])=>{T[IDX[key]].gd=n});
 function weave(list){const body=list.filter(k=>k!==29),out=[IDX.br46];let c=0,r=new Date().getDate();
   body.forEach((k,i)=>{out.push(k);c++;if(c%3===0&&i<body.length-1)out.push(IDX[ROT[r++%ROT.length]])});
