@@ -5,22 +5,27 @@
 import {WebGLRenderer,Scene,PerspectiveCamera,Group,Mesh,MeshStandardMaterial,MeshBasicMaterial,SphereGeometry,CylinderGeometry,TorusGeometry,TubeGeometry,CatmullRomCurve3,Vector3,Vector2,HemisphereLight,DirectionalLight,AmbientLight,Raycaster,Color,BufferGeometry,BufferAttribute,DoubleSide} from 'three';
 
 export const CREDIT='Modelo 3D: BodyParts3D © 2008 LSDB, CC BY-SA 2.1 JP';
-const PAL={bone:'#efe6d3',bone2:'#e6dbc3',mus:'#c98477',mus2:'#b9746a',tend:'#f5f2ea',men:'#d6e4f1',lig:'#ebe7dc',fat:'#f2c75c',bursa:'#7fb0e0',nerve:'#f2d14b',hi:'#e0603f'};
+const PAL={bone:'#efe6d3',bone2:'#e6dbc3',mus:'#c98477',mus2:'#b9746a',tend:'#f5f2ea',men:'#d6e4f1',lig:'#ebe7dc',fat:'#f2c75c',bursa:'#7fb0e0',nerve:'#f2d14b',hi:'#ff5a36'};
 export const ZONES={
   'Suprarrotuliana':{label:'Bolsa suprarrotuliana',parts:['bursa','quadT']},
   'Bajo la rótula':{label:'Grasa de Hoffa y tendón rotuliano',parts:['hoffa','ptend']},
   'Lado interno':{label:'Menisco interno y ligamento colateral medial',parts:['menM','mcl']},
   'Lado externo':{label:'Menisco externo y ligamento colateral lateral',parts:['menL','lcl']},
-  'Ciático / Posterior':{label:'Corva, isquiotibiales y nervio ciático',parts:['ham','nerve']}
+  'Ciático / Posterior':{label:'Corva, isquiotibiales y nervio ciático',parts:['ham','nerve']},
+  'Rótula':{label:'Rótula (articulación patelofemoral)',parts:['pat']},
+  'Pata de ganso':{label:'Pata de ganso (inserción interna bajo la rodilla)',parts:['pes']},
+  'Cintilla iliotibial':{label:'Cintilla iliotibial (lado externo del muslo)',parts:['itb']},
+  'Hueco poplíteo':{label:'Hueco poplíteo y músculo poplíteo',parts:['pop']},
+  'Gemelos':{label:'Gemelos y pantorrilla',parts:['gm','gl']}
 };
 const GROUPS={quad:['rf','vmed','vlat','vint','quadT'],ham:['st','sm','bfl','bfs']};
-export const PART_NAMES={quad:'cuádriceps y su tendón',quadT:'tendón del cuádriceps',pat:'rótula',ptend:'tendón rotuliano',hoffa:'grasa de Hoffa',bursa:'bolsa suprarrotuliana',menM:'menisco interno',menL:'menisco externo',mcl:'ligamento colateral medial',lcl:'ligamento colateral lateral',ham:'isquiotibiales',nerve:'nervio ciático',fem:'fémur',tib:'tibia',gast:'gemelos'};
+export const PART_NAMES={pes:'pata de ganso',itb:'cintilla iliotibial',pop:'poplíteo',gm:'gemelo interno',gl:'gemelo externo',quad:'cuádriceps y su tendón',quadT:'tendón del cuádriceps',pat:'rótula',ptend:'tendón rotuliano',hoffa:'grasa de Hoffa',bursa:'bolsa suprarrotuliana',menM:'menisco interno',menL:'menisco externo',mcl:'ligamento colateral medial',lcl:'ligamento colateral lateral',ham:'isquiotibiales',nerve:'nervio ciático',fem:'fémur',tib:'tibia',gast:'gemelos'};
 const MUSCLES=new Set(['rf','vmed','vlat','vint','st','sm','bfl','bfs','gm','gl','pop','itb']);
 const SHIN=new Set(['tib','fib','gm','gl','pop']);
 const partZone={};Object.entries(ZONES).forEach(([z,v])=>v.parts.forEach(p=>(GROUPS[p]||[p]).forEach(q=>partZone[q]=z)));
 
 let R,scene,cam,root,femur,shin,patG,parts={},ptendMesh,ghosts=[],host=null,LM=null,PIV,ready=null,
-  state={mode:'show',angle:0,sel:new Set(),hl:new Set(),rotY:-.5,rotX:.12},onPick=null,raf=0,ro=null,io=null,visible=true;
+  state={mode:'show',full:false,angle:0,sel:new Set(),hl:new Set(),rotY:-.5,rotX:.12},onPick=null,raf=0,ro=null,io=null,visible=true;
 
 const V3=a=>new Vector3(a[0],a[1],a[2]);
 function mat(col,o={}){const m=new MeshStandardMaterial({color:col,roughness:.72,metalness:0,...o});m.userData.base=new Color(col);m.userData.op=o.opacity??1;m.userData.em=new Color(o.emissive||'#000000');return m}
@@ -63,11 +68,13 @@ function build({geos,L}){
   const eM=V3(L.epiM),eL=V3(L.epiL),tm=V3(L.tibMed),fh=V3(L.fibHead);
   add('mcl',tube([[eM.x-.08,eM.y+.25,eM.z],[eM.x-.12,eM.y-.5,eM.z+.05],[eM.x-.02,L.tmax-.4,eM.z+.12],[tm.x-.08,tm.y,tm.z+.05]],.09),mat(PAL.lig),root);
   add('lcl',tube([[eL.x+.08,eL.y+.15,eL.z-.1],[eL.x+.14,eL.y-.6,eL.z-.25],[fh.x+.08,fh.y+.12,fh.z+.05]],.08),mat(PAL.lig),root);
+  /* pata de ganso: sartorio, grácil y semitendinoso se insertan en la cara interna de la tibia */
+  add('pes',tube([[tm.x-.05,PIV.y+1.4,PIV.z-.55],[tm.x-.22,L.tmax-.2,tm.z-.25],[tm.x-.06,tm.y-.25,tm.z+.25],[tb.x-.5,tb.y-.55,tb.z-.08]],.1),mat(PAL.tend),root);
   /* nervio ciático → tibial (posterior, entre isquiotibiales y gemelos) */
   const fp=V3(L.femPost);
   add('nerve',tube([[fp.x-.15,4.3,fp.z-.95],[fp.x-.1,2.4,fp.z-1.0],[PIV.x+.05,.6,PIV.z-1.15],[PIV.x,-1,PIV.z-1.25],[PIV.x-.1,-3.4,PIV.z-1.2]],.075),mat(PAL.nerve,{emissive:'#6a4c08',emissiveIntensity:.3}),root);
   /* metas fantasma 0°, 90°, 120° */
-  [0,90,120].forEach(a=>{const g=piv(new Group()),gm=new MeshBasicMaterial({color:'#2c5fa6',transparent:true,opacity:.1,depthWrite:false,side:DoubleSide});const s=new Mesh(new CylinderGeometry(.55,.42,3.4,20),gm);s.position.set(0,-2.3-(PIV.y-L.tmax),0);g.add(s);g.rotation.x=a*Math.PI/180;g.visible=false;root.add(g);ghosts.push(g)});
+  [0,90,120].forEach(a=>{const g=piv(new Group()),gm=new MeshBasicMaterial({color:'#2c5fa6',transparent:true,opacity:.1,depthWrite:false,side:DoubleSide});const s=new Mesh(new CylinderGeometry(.55,.42,3.4,20),gm);gm.color.set('#111111');gm.opacity=.08;s.position.set(0,-2.3-(PIV.y-L.tmax),0);g.add(s);g.rotation.x=a*Math.PI/180;g.visible=false;root.add(g);ghosts.push(g)});
 }
 function pose(){
   const t=state.angle*Math.PI/180;shin.rotation.x=t;patG.rotation.x=t*.66;
@@ -85,7 +92,7 @@ function pose(){
 }
 function frame(){raf=0;if(!host||!visible||!scene)return;const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;
   const c=R.domElement,pr=R.getPixelRatio();if(c.width!==Math.round(w*pr)||c.height!==Math.round(h*pr)){R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
-  cam.position.z=w/h<.75?23:w/h<1.2?19.5:18;pose();R.render(scene,cam)}
+  const a=w/h;let z=a<.75?23:a<1.2?19.5:18;if(state.full){z*=a<.75?1.12:1.3;cam.position.x=a>1.2?-2.4:0;cam.position.y=a<.75?-1.6:-.4}else{cam.position.x=0;cam.position.y=0}cam.position.z=z;pose();R.render(scene,cam)}
 export function draw(){if(!raf)raf=requestAnimationFrame(frame)}
 
 let drag=null;
@@ -99,7 +106,9 @@ function ptr(){const c=R.domElement;
 const ray=new Raycaster();
 function pick(e){const r=R.domElement.getBoundingClientRect(),v=new Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(v,cam);
   const hits=ray.intersectObjects(Object.values(parts).flat().filter(m=>m.visible),false);
-  const h=hits.find(x=>partZone[x.object.userData.part]);if(!h)return;const z=partZone[h.object.userData.part];if(z&&onPick)onPick(z)}
+  const z0=hits.filter(x=>partZone[x.object.userData.part]);if(!z0.length)return;
+  /* prioriza estructuras internas (no músculo) si están justo detrás del músculo tocado */
+  const solid=z0.find(x=>!MUSCLES.has(x.object.userData.part)),h=solid&&solid.distance-z0[0].distance<1.6?solid:z0[0];const z=partZone[h.object.userData.part];if(z&&onPick)onPick(z)}
 
 /* base: URL de la carpeta vendor/ (para cargar knee.bin) */
 export function init(base){if(ready)return ready;
@@ -111,7 +120,7 @@ export function init(base){if(ready)return ready;
 /* opts: {mode:'pick'|'rom'|'show', sel:[zonas], hl:[partes o grupos], angle, rotY, onPick} */
 export async function mount(el,opts={},base=import.meta.url){if(!await init(base))return false;host=el;if(R.domElement.parentNode!==el)el.prepend(R.domElement);
   ro.disconnect();ro.observe(el);io.disconnect();io.observe(el);visible=true;
-  state.mode=opts.mode||'show';state.sel=new Set(opts.sel||[]);state.hl=new Set(opts.hl||[]);if(opts.angle!=null)state.angle=opts.angle;onPick=opts.onPick||null;
+  state.mode=opts.mode||'show';state.full=!!opts.full;state.sel=new Set(opts.sel||[]);state.hl=new Set(opts.hl||[]);if(opts.angle!=null)state.angle=opts.angle;onPick=opts.onPick||null;
   if(opts.rotY!=null)state.rotY=opts.rotY;if(opts.rotX!=null)state.rotX=opts.rotX;draw();return true}
 export function set(o={}){if(o.sel)state.sel=new Set(o.sel);if(o.hl)state.hl=new Set(o.hl);if(o.angle!=null)state.angle=o.angle;if(o.rotY!=null)state.rotY=o.rotY;draw()}
 export function spin(to,ms=900){const a=state.rotY,t0=performance.now();const st=n=>{const k=Math.min(1,(n-t0)/ms),e=1-Math.pow(1-k,3);state.rotY=a+(to-a)*e;draw();if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)}
