@@ -465,6 +465,15 @@ b,strong,.lv,.num{font-weight:500}
   .pl3dn{font-size:clamp(40px,3.6vw,60px)}.pl3dhow{font-size:19px}.pl3d .kcap{font-size:16px}
   .pldeep-in{max-width:860px;padding:64px 48px calc(64px + var(--g))}
 }
+
+/* video de coach a pantalla completa */
+.vid{position:absolute;inset:0;overflow:hidden}
+.vid video{position:absolute;left:0;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;top:calc(36% - var(--fy)*100vw*9/16);-webkit-mask-image:linear-gradient(transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(transparent 0,#000 14%,#000 86%,transparent 100%)}
+.player .canvas:has(.vid)::after{background:linear-gradient(transparent 50%,rgba(244,244,242,.75) 64%,rgba(244,244,242,.94))}
+@media (min-width:1024px) and (min-aspect-ratio:5/4) and (min-height:560px){
+  .vid video{top:calc(44% - var(--fy)*100vw*9/16)}
+}
+@media (min-aspect-ratio:16/9) and (min-width:1024px){.vid video{width:auto;height:118vh;left:50%;transform:translateX(-50%);top:calc(44% - var(--fy)*118vh)}}
 </style>
 </head>
 <body>
@@ -983,7 +992,14 @@ function scene(g,k,withFig=true){if(T[k]&&T[k].vis==='top')return topScene(k);if
    +S('grain',`<rect x="${x0}" width="${WW}" height="${VH}" filter="url(#gr)" opacity=".3"/>`)
    +(withFig?figSVG(k,true,D?`${x0} 0 ${WW} ${VH}`:undefined):'')+(T[k]&&T[k].vis?vizHTML(k):'');
 }
-const paint=(el,g,k,withFig=true)=>{el._p=[g,k,withFig];swap(el,scene(g,k,withFig))};
+/* videos de coach (Google Flow / Veo): reemplazan la acuarela en el reproductor; si no cargan, vuelve la acuarela */
+const VID={1:{src:'video/1.mp4',poster:'video/1.jpg',fy:.76,bg:'#e6e1d5'}};
+const vidHTML=v=>`<div class="vid" style="--fy:${v.fy};background:radial-gradient(ellipse 90% 70% at 50% 45%,#eeeae0,${v.bg} 70%)"><video src="${v.src}" poster="${v.poster}" muted playsinline loop preload="auto" aria-hidden="true"></video></div>`;
+const paint=(el,g,k,withFig=true)=>{el._p=[g,k,withFig];const v=el.id==='plArt'&&/^https?:/.test(location.protocol)&&VID[k];
+  if(!v){swap(el,scene(g,k,withFig));return}
+  swap(el,vidHTML(v));const vd=el.querySelector('video');if(!vd)return;
+  vd.addEventListener('error',()=>{if(el._p&&el._p[1]===k)swap(el,scene(g,k,withFig))},{once:true});
+  if(typeof run!=='undefined'&&run)vd.play().catch(()=>{})};
 DESKQ.addEventListener&&DESKQ.addEventListener('change',()=>document.querySelectorAll('.canvas').forEach(el=>{if(el._p){const[g,k,f]=el._p;el.innerHTML='';swap(el,scene(g,k,f))}}));
 
 /* sonido */
@@ -1325,8 +1341,8 @@ function draw(){const x=cur(),el=x.t-left,f=Math.min(1,el/x.t);
 }
 function stepT(){const n=Date.now(),dt=n-last;last=n;left-=dt/1000;bt+=dt;spent+=dt/1000;if(!VG.rel&&left<=10&&cur().t>=45&&!cur().mind&&VG.on){VG.rel=true;hush();say('Suelta despacio. Regresa a la quietud.',.85)}if(left<=0){left=0;draw();trackEnd(true);return}draw()}
 async function wake(on){try{if(on&&!lock&&navigator.wakeLock)lock=await navigator.wakeLock.request('screen');if(!on&&lock){lock.release();lock=null}}catch(e){}}
-function play(){if(run)return;musStart();$('upnext').hidden=true;clearInterval(cdT);run=true;last=Date.now();tick=setInterval(stepT,200);audio();wake(true);if(VG.need&&VG.on)narrate(cur());draw()}
-function pause(){run=false;clearInterval(tick);wake(false);if(VG.speaking)VG.need=true;hush(true);draw()}
+function play(){if(run)return;musStart();{const v=document.querySelector('#plArt video');v&&v.play().catch(()=>{})}$('upnext').hidden=true;clearInterval(cdT);run=true;last=Date.now();tick=setInterval(stepT,200);audio();wake(true);if(VG.need&&VG.on)narrate(cur());draw()}
+function pause(){run=false;{const v=document.querySelector('#plArt video');v&&v.pause()}clearInterval(tick);wake(false);if(VG.speaking)VG.need=true;hush(true);draw()}
 function trackEnd(full){pause();hush();VG.need=false;if(full){const d=getDone();d[cur().k]=(d[cur().k]||0)+1;store.set('snry6-done',d)}
   if(qi>=PL.length-1){gong(73,10);setTimeout(finishCard,900);return}gong();showNext()}
 function finishCard(){setTimeout(musStop,4000);say('Práctica completa. Eleva la pierna veinte minutos y, si sientes calor en la rodilla, pon hielo envuelto en una toalla.');$('after').value=ans.pain;$('afterv').textContent=ans.pain;
