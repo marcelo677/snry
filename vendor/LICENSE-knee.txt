@@ -1,0 +1,10 @@
+vendor/knee.bin — huesos (fémur, tibia, peroné, rótula izquierdos) y músculos del muslo y la pantorrilla
+recortados alrededor de la rodilla y simplificados con vendor/knee-build.py.
+
+Fuente: BodyParts3D, © 2008 Life Science Integrated Database Center (LSDB), Japón.
+Licencia: Creative Commons Atribución-CompartirIgual 2.1 Japón (CC BY-SA 2.1 JP)
+https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en
+Este archivo derivado se distribuye bajo la misma licencia.
+
+Los tejidos blandos (meniscos, ligamentos colaterales, tendones, grasa de Hoffa, bolsa suprarrotuliana
+y nervio ciático) se modelan en código (vendor/knee3d.src.js) a partir de puntos de referencia del mismo modelo.
