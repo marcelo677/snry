@@ -582,7 +582,7 @@ b,strong,.lv,.num{font-weight:500}
 <!-- biblioteca -->
 <div class="sheet" id="lib" role="dialog" aria-label="Biblioteca" aria-hidden="true"><div class="sc">
   <div class="sh-top"><h2>Biblioteca</h2><button class="ic" data-close="lib" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
-  <p class="sub">30 posturas de yoga, 8 ejercicios de fisioterapia y 6 prácticas de respiración y atención plena. Toca una para practicarla o el ícono de información para leer su ficha.</p>
+  <p class="sub">30 posturas de yoga, 13 ejercicios de fisioterapia y 6 prácticas de respiración y atención plena. Toca una para practicarla o el ícono de información para leer su ficha.</p>
   <div class="filters" id="dfilters"></div><div class="filters" id="filters"></div><div id="sci"></div><div id="tracks"></div>
   <p class="disc">No sustituye a tu fisioterapeuta. Confirma con él cada práctica, rango y carga.</p>
 </div></div>
@@ -841,6 +841,12 @@ const PHY=[
  ['Prensa Supina','Empuje unipodal con banda','k',90,1,0,'Boca arriba, banda en la planta del pie izquierdo sostenida con las manos. Rodilla doblada a 90°: empuja hasta estirar la pierna contra la banda y regresa lento.','Simula una prensa de pierna sin cargar la articulación con el peso del cuerpo: cuádriceps y glúteo trabajan en un rango seguro.','fza',['ext'],'Concéntrica y excéntrica','cerrada',1,'3 × 10','Empujo desde mi centro.'],
  ['Retro-Walking','Caminata en reversa VMO','b',90,1,0,'En un pasillo despejado, camina hacia atrás en pasos cortos, apoyando primero la punta y luego todo el pie, con la rodilla que se estira al final del paso.','Caminar hacia atrás activa el vasto medial oblicuo y la extensión terminal con menos compresión rotuliana que caminar hacia adelante.','eq',['fza','ext'],'Marcha en reversa','cerrada',1,'2 × 45 s','Retrocedo para avanzar.'],
  ['Monster Walks','Abducción cadera con banda','b',90,1,0,'Banda alrededor de los tobillos, rodillas levemente dobladas y cadera atrás. Da pasos laterales y en diagonal sin que las rodillas se junten.','El glúteo medio controla que la rodilla no caiga hacia adentro (valgo), lo que protege meniscos y rótula al caminar.','eq',['fza'],'Isométrica de cadera + marcha','cerrada',1,'3 × 10 pasos','Mis caderas sostienen mis rodillas.']
+,
+ ['Talón Elevado','Prop hang · extensión pasiva','k',120,0,0,'Sentado o boca arriba, apoya solo el talón izquierdo sobre una toalla enrollada o un bloque, con la parte de atrás de la rodilla en el aire. Deja que la gravedad estire la rodilla. Relaja el muslo y respira.','La carga lenta y sostenida estira la cápsula posterior y la corva: es la forma más directa de recuperar los últimos grados de extensión sin forzar.','ext',['mov'],'Estiramiento pasivo sostenido','—',0,'3 × 1–2 min','Dejo que la gravedad haga el trabajo.'],
+ ['Cuelgue Boca Abajo','Prone hang','k',120,0,0,'Boca abajo en la cama, con la rodilla izquierda justo pasando el borde y la pierna colgando. Una toalla bajo el muslo protege la rótula. Relájate y deja que el pie baje.','Igual que el talón elevado, pero con el peso de la pierna completa: estira la cápsula posterior con la cadera extendida.','ext',['mov'],'Estiramiento pasivo sostenido','—',0,'3 × 1 min','Suelto hacia la línea recta.'],
+ ['Corva con Cinta','Estiramiento de isquiotibiales','k',90,0,0,'Sentado con la pierna izquierda estirada y una cinta en la planta. Espalda larga, inclínate desde la cadera hasta sentir la corva, sin doblar la rodilla. Si hormiguea, afloja.','Unos isquiotibiales cortos jalan la rodilla hacia la flexión; alargarlos libera la extensión completa.','mov',['ext'],'Estiramiento estático','—',0,'3 × 30 s','Me alargo sin jalar.'],
+ ['Empuje de Talón','Toalla y quad set sentado','k',90,0,0,'Sentado con la pierna estirada y una toalla alrededor del pie. Jala la toalla hacia ti y al mismo tiempo empuja la parte de atrás de la rodilla hacia el suelo. Sostén 5 s.','Combina el estiramiento del gemelo con la contracción del cuádriceps: el músculo y la cápsula trabajan juntos hacia los 0°.','ext',['fza'],'Isométrica + estiramiento','abierta',0,'2 × 10 · 5 s','Empujo hacia mi línea.'],
+ ['Extensión Sentado','Arco largo de cuádriceps','k',90,1,0,'Sentado en una silla con la espalda apoyada. Estira la rodilla izquierda hasta dejar la pierna recta, aprieta el muslo 3 s y baja lento.','Fortalece el cuádriceps en todo su recorrido y entrena el bloqueo final de la rodilla que necesitas para caminar.','fza',['ext'],'Concéntrica y excéntrica','abierta',1,'3 × 10 · 3 s','Fuerza hasta el final del rango.']
 ];
 const PHY_POSE=[
  V(160,40,104)+`<path d="M160 76 L110 79" stroke="${P}" stroke-width="3" fill="none"/>`+H(100,14)+L('100,25 100,58')+L('100,31 92,56')+L('100,31 108,56')+L('100,58 94,80 92,100')+L('100,58 108,79 104,100',A)+Ds('M122 66 L134 66'),
@@ -851,8 +857,14 @@ const PHY_POSE=[
  S(0)+RB+L('46,95 72,88')+`<path d="M72 88 L160 58" stroke="${P}" stroke-width="3" fill="none"/>`+L('96,96 132,68 160,58',A)+Ds('M170 52 L182 46'),
  H(100,14)+L('100,25 100,58')+L('100,31 112,52')+L('100,31 90,52')+L('100,58 106,80 108,100')+L('100,58 90,78 80,98',A)+Ds('M70 100 L54 100'),
  H(100,22)+L('100,33 96,60')+L('99,38 118,52')+L('99,38 114,58')+L('96,60 80,78 76,100')+`<path d="M78 92 L122 92" stroke="${P}" stroke-width="3" fill="none"/>`+L('96,60 116,78 124,100',A)+Ds('M134 98 L150 98')
+
+ ,S()+RB+L('96,96 172,90',A)+R(164,92,18,10,3)+Ds('M134 78 L134 88'),
+ H(28,82)+L('38,86 100,88')+L('42,86 70,94')+R(12,92,124,12,3)+L('100,88 132,90 180,92')+L('100,90 132,92 168,98',A)+Ds('M156 104 L156 110'),
+ H(70,48)+L('72,58 92,90')+L('76,64 140,84')+L('92,90 150,92 172,90',A)+`<path d="M140 84 Q160 70 172 86" stroke="${P}" stroke-width="3" fill="none"/>`+L('92,92 118,74 134,100'),
+ H(62,48)+L('64,58 90,92')+L('68,64 120,84')+L('90,94 150,96 168,90',A)+`<path d="M120 84 Q150 66 170 88" stroke="${P}" stroke-width="3" fill="none"/>`+L('90,94 116,74 132,100')+Ds('M128 104 L140 104'),
+ R(54,56,52,7,2)+V(58,63,104)+V(102,63,104)+H(80,14)+L('80,25 78,58')+L('80,31 92,50')+L('78,58 106,62 104,100')+L('78,58 146,56',A)+Ds('M150 46 L150 54')
 ];
-const PHY_ANIM=[[100,58,-4],'sway',[96,96,-8],[112,46,5],[96,76,-5],[96,96,-6],[100,58,6],'sway'];
+const PHY_ANIM=[[100,58,-4],'sway',[96,96,-8],[112,46,5],[96,76,-5],[96,96,-6],[100,58,6],'sway',null,null,'sway',[92,92,-3],[78,58,-14]];
 const PHY_SK=[
  {sa:'TKE · Terminal Knee Extension',p:[['terminal','los últimos grados del movimiento'],['knee extension','extensión de rodilla']],m:'Ejercicio clásico de la fisioterapia deportiva. Se usa desde los primeros días tras una artroscopia porque devuelve la extensión completa de pie, el rango que más se pierde.',mu:'Cuádriceps, sobre todo el vasto medial oblicuo (VMO).',m2:'Glúteo mayor y gastrocnemio estabilizan; los isquiotibiales se alargan.'},
  {sa:'Spanish Squat',p:[['spanish','creado por fisioterapeutas españoles'],['squat','sentadilla']],m:'Popularizado en el tratamiento de la tendinopatía rotuliana. La cinta permite cargar el cuádriceps con la tibia vertical, sin que la rodilla avance sobre los dedos.',mu:'Cuádriceps en isométrico intenso.',m2:'Glúteos, core y tibial anterior; la grasa de Hoffa queda con poca compresión.'},
@@ -862,6 +874,12 @@ const PHY_SK=[
  {sa:'Supine Leg Press',p:[['supine','boca arriba'],['leg press','prensa de pierna']],m:'Reproduce el gesto de la prensa del gimnasio con una banda: el empuje es real, la carga sobre la articulación es mínima.',mu:'Cuádriceps y glúteo mayor.',m2:'Gemelos al final del empuje; aductores estabilizan.'},
  {sa:'Retro-Walking',p:[['retro','hacia atrás'],['walking','caminar']],m:'La marcha hacia atrás se usa en rehabilitación de rodilla porque invierte la carga: más cuádriceps, menos presión bajo la rótula.',mu:'Cuádriceps (VMO) y gemelos.',m2:'Glúteos e isquiotibiales; equilibrio y propiocepción.'},
  {sa:'Monster Walks',p:[['monster','monstruo, por la forma de caminar'],['walks','pasos']],m:'Caminar con banda en los tobillos y la cadera atrás despierta el glúteo medio, el músculo que mantiene la rodilla alineada.',mu:'Glúteo medio y glúteo menor.',m2:'Tensor de la fascia lata, cuádriceps en isométrico y core.'}
+,
+ {sa:'Prop Hang · Heel Prop',p:[['prop','apoyo'],['hang','colgar, dejar caer']],m:'Ejercicio básico de la fisioterapia para la rodilla que no termina de estirarse, sea por artrosis o después de una cirugía.',mu:'Ninguno activo: estiramiento de la cápsula posterior, poplíteo y gemelos.',m2:'Isquiotibiales en elongación pasiva.'},
+ {sa:'Prone Hang',p:[['prone','boca abajo'],['hang','colgar']],m:'Variante del talón elevado con más carga: usa el peso de toda la pierna para recuperar la extensión.',mu:'Ninguno activo: estiramiento de la cápsula posterior y la corva.',m2:'Flexores de cadera en posición neutra.'},
+ {sa:'Hamstring Strap Stretch',p:[['hamstring','isquiotibial, la corva'],['strap','cinta']],m:'Estiramiento clásico; con rodilla operada se hace sentado para controlar la tensión y no traccionar el nervio ciático.',mu:'Isquiotibiales en estiramiento.',m2:'Gemelos y fascia plantar.'},
+ {sa:'Towel Heel Push',p:[['towel','toalla'],['heel push','empuje con el talón']],m:'Combina dos ejercicios básicos de extensión: el quad set y el estiramiento del gemelo con toalla.',mu:'Cuádriceps (isométrico).',m2:'Gemelos y sóleo en estiramiento; cápsula posterior.'},
+ {sa:'Long Arc Quad',p:[['long arc','arco largo, recorrido completo'],['quad','cuádriceps']],m:'El ejercicio de fortalecimiento de cuádriceps más usado en artrosis de rodilla: sin cargar el peso del cuerpo y con recorrido completo.',mu:'Cuádriceps, sobre todo recto femoral y vasto medial.',m2:'Tibial anterior al llevar las puntas hacia ti.'}
 ];
 VO.push(
  'Banda detrás de la rodilla izquierda, de pie, con apoyo si lo necesitas. [pausa 2] Deja que la banda doble un poco la rodilla. [pausa 2] Ahora aprieta el muslo y estira la rodilla por completo. Sostén tres segundos. [pausa 3] Suelta despacio. *Mi rodilla encuentra su línea.*',
@@ -871,7 +889,12 @@ VO.push(
  'Boca arriba, talones sobre los deslizadores. [pausa 2] Sube la cadera en puente. [pausa 2] Deja que los talones se alejen despacio, en cuatro tiempos. [pausa 3] Baja la cadera y recoge los pies con calma. *Suelto con fuerza, sin prisa.*',
  'Banda en la planta del pie izquierdo, rodilla doblada. [pausa 2] Empuja hasta estirar la pierna. [pausa 2] Regresa lento, resistiendo la banda. [pausa 2] *Empujo desde mi centro.*',
  'Pasillo despejado. Camina hacia atrás en pasos cortos. [pausa 2] Apoya primero la punta y deja que la rodilla se estire al final del paso. [pausa 3] Mira hacia adelante, respira suave. *Retrocedo para avanzar.*',
- 'Banda en los tobillos, rodillas suaves y cadera atrás. [pausa 2] Da pasos hacia el lado, sin que las rodillas se junten. [pausa 3] Ahora en diagonal. [pausa 2] *Mis caderas sostienen mis rodillas.*'
+ 'Banda en los tobillos, rodillas suaves y cadera atrás. [pausa 2] Da pasos hacia el lado, sin que las rodillas se junten. [pausa 3] Ahora en diagonal. [pausa 2] *Mis caderas sostienen mis rodillas.*',
+ 'Apoya solo el talón izquierdo sobre la toalla. La parte de atrás de la rodilla queda en el aire. [pausa 2] Suelta el muslo por completo. [pausa 3] Deja que la gravedad estire la rodilla, poco a poco. [pausa 3] Respira hacia la parte de atrás de la rodilla. *Dejo que la gravedad haga el trabajo.*',
+ 'Boca abajo, la rodilla izquierda justo pasando el borde de la cama. [pausa 2] Deja colgar la pierna. [pausa 3] No empujes nada, solo suelta. [pausa 3] *Suelto hacia la línea recta.*',
+ 'Sentado, pierna izquierda estirada, cinta en la planta. [pausa 2] Espalda larga. Inclínate desde la cadera hasta sentir la corva. [pausa 3] Si sientes hormigueo, afloja un poco. [pausa 2] *Me alargo sin jalar.*',
+ 'Toalla alrededor del pie izquierdo. [pausa 2] Jala la toalla hacia ti y al mismo tiempo empuja la parte de atrás de la rodilla hacia el suelo. [pausa 2] Sostén cinco segundos. [pausa 3] Suelta. *Empujo hacia mi línea.*',
+ 'Sentado en la silla, espalda apoyada. [pausa 2] Estira la rodilla izquierda hasta dejar la pierna recta. [pausa 2] Aprieta el muslo tres segundos. [pausa 3] Baja lento. *Fuerza hasta el final del rango.*'
 );
 while(VO.length<T.length)VO.push('');
 PHY.forEach(([n,d,g,t,l,f,c,w,o,o2,ct,ch,ld,dose,it],i)=>{const k=T.length;T.push({k,n,d,g,t,l,f,c,w,o,o2,ct,ch,ld,dose,it,mod:'physio'});POSE[k]=PHY_POSE[i];ANIM[k]=PHY_ANIM[i];SK[k]=PHY_SK[i]});
@@ -1083,7 +1106,7 @@ const MODE={full:'completa',gentle:'suave',rest:'de descanso'};
 let K3=null,K3p=null;
 const k3=()=>K3p||(K3p=(/^https?:/.test(location.protocol)&&window.WebGLRenderingContext?import('./vendor/knee3d.js'):Promise.reject()).then(m=>{K3=m;return m}).catch(()=>null));
 const K3HL={ext:['quad','ptend','pat'],flx:['ham','pat'],fza:['quad','pat','ptend'],edm:['bursa'],neu:['nerve','ham'],mov:['ham'],eq:['mcl','lcl','menM','menL']};
-const K3X={36:[['quad','pat']],37:[['quad','ptend'],['hoffa']],38:[['quad']],39:[['quad','pat']],40:[['ham']],41:[['quad','pat']],42:[['quad','ptend']],43:[['mcl','lcl','menM']]};
+const K3X={36:[['quad','pat']],37:[['quad','ptend'],['hoffa']],38:[['quad']],39:[['quad','pat']],40:[['ham']],41:[['quad','pat']],42:[['quad','ptend']],43:[['mcl','lcl','menM']],44:[['pop','gm','gl']],45:[['pop','gm','gl']],46:[['ham']],47:[['quad','gm','gl']],48:[['quad']]};
 const k3parts=k=>{const x=T[k],o=K3X[k];return o?{hl:o[0],pr:o[1]||[]}:{hl:K3HL[x.o]||[],pr:[]}};
 function k3deep(root){const el=root.querySelector('.k3deep');if(!el)return;const k=+el.dataset.k,{hl,pr}=k3parts(k);if(!hl.length&&!el.classList.contains('full'))return;
   k3().then(m=>{if(!m)return;const cap=root.querySelector('.k3cap');
