@@ -144,6 +144,18 @@ a{text-underline-offset:3px}
 .kz:active{transform:translate(-50%,-50%) scale(.97)}
 .kz i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--acc);flex:none}
 .kz[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}.kz[aria-pressed=true] i{background:var(--acc);border-color:var(--acc)}
+.kzs{position:absolute;inset:0}
+.kmap.is3d{height:auto;max-width:360px}
+.kmap.is3d>svg{display:none}
+.kmap.is3d .k3d{position:relative;display:block;width:100%;height:280px;cursor:grab;touch-action:pan-y}
+.kmap.is3d .kzs{position:static;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.kmap.is3d .kz{position:static;transform:none}.kmap.is3d .kz:active{transform:scale(.97)}
+.kcap{font-size:13.5px;color:var(--mute);text-align:center;margin:4px 0 0;min-height:1.3em}
+.kmap:not(.is3d) .kcap{display:none}
+.k3rom{position:relative;height:230px;margin:-4px -6px 4px}.k3rom:empty{display:none}
+.k3rom .k3d,.k3deep .k3d{display:block;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+.k3deep{position:relative;height:240px;margin:4px 0 6px;border-radius:18px;background:radial-gradient(ellipse at 50% 45%,rgba(255,255,255,.7),rgba(157,187,224,.18))}
+.k3deep:not(.on){display:none}
 .kside{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mute);max-width:300px;margin:0 auto}
 .seg{display:flex;gap:6px;margin-top:12px}
 .seg button{flex:1;min-height:44px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.6);font-weight:600;font-size:14.5px}
@@ -458,6 +470,7 @@ input[type=range]{width:100%;accent-color:var(--acc);height:40px}
   <div class="small" style="display:flex;align-items:center;gap:8px;margin-top:14px"><span id="gTxt" style="flex:1"></span><button class="ic" id="gMinus" aria-label="Bajar meta" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button><button class="ic" id="gPlus" aria-label="Subir meta" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div>
   <h3 class="h3">Rango de movimiento hoy</h3><p class="sub">Mide con goniómetro o app. Extensión: grados que faltan para estirar (meta 0°).</p>
   <div class="romcard">
+    <div class="k3rom" id="k3rom"></div><p class="kcap" id="k3romCap" style="margin:-2px 0 6px"></p>
     <div class="romrow"><b>Extensión</b><input type="range" id="rExt" min="-5" max="20" step="1" value="2" aria-label="Extensión en grados"><span class="num" id="rExtV">2°</span></div>
     <div class="romrow"><b>Flexión</b><input type="range" id="rFlx" min="30" max="140" step="1" value="100" aria-label="Flexión en grados"><span class="num" id="rFlxV">100°</span></div>
     <div class="romrow"><b>CPM hoy</b><div style="display:flex;gap:8px;align-items:center"><button class="ic" id="rCpmM" aria-label="Menos sesiones de CPM" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg></button><button class="ic" id="rCpmP" aria-label="Más sesiones de CPM" style="border:1px solid var(--line)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg></button></div><span class="num" id="rCpmV">0</span></div>
@@ -903,14 +916,17 @@ function renderStep(){
   if(step===0)h=`<div class="body"><h1 class="ttl">${greet()}</h1><p class="txt">Cinco preguntas para adaptar tu práctica de hoy.</p></div><div class="end"><button class="cta" id="go0">Empezar</button>${prev&&prev.day===today?'<button class="link" id="same">Igual que hace un rato</button>':''}</div>`;
   if(step===1)h=`<div class="body"><h2 class="ttl">¿Cómo llegas hoy?</h2>${pills(MOODS,i=>ans.mood===i)}</div>`;
   if(step===2)h=`<div class="body"><h2 class="ttl">¿Cuánto duele la rodilla?</h2><div class="painrow"><span class="painbig" id="pv">${ans.pain}</span><span class="painlab" id="pl">${painLab(ans.pain)}</span></div><input type="range" min="0" max="10" value="${ans.pain}" id="pr" aria-label="Dolor de 0 a 10"></div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
-  if(step===3)h=`<div class="body"><h2 class="ttl">¿Dónde lo sientes?</h2><p class="txt" style="margin:4px 0 0;color:var(--mute);font-size:15px">Rodilla izquierda, vista de frente. Toca una o varias zonas.</p><div class="kmap" id="kmap">${KNEE}${KZ.map(([v,lab,x,y])=>`<button class="kz" data-v="${v}" style="left:${x}%;top:${y}%" aria-pressed="${ans.where.includes(v)}"><i></i>${lab}</button>`).join('')}</div>${pills(['Espalda baja'],(i,o)=>ans.where.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
+  if(step===3)h=`<div class="body"><h2 class="ttl">¿Dónde lo sientes?</h2><p class="txt" style="margin:4px 0 0;color:var(--mute);font-size:15px">Rodilla izquierda, vista de frente. Toca una o varias zonas.</p><div class="kmap" id="kmap">${KNEE}<p class="kcap" id="kcap">Gira la rodilla con el dedo y toca dónde duele.</p><div class="kzs">${KZ.map(([v,lab,x,y])=>`<button class="kz" data-v="${v}" style="left:${x}%;top:${y}%" aria-pressed="${ans.where.includes(v)}"><i></i>${lab}</button>`).join('')}</div></div>${pills(['Espalda baja'],(i,o)=>ans.where.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
   if(step===4)h=`<div class="body"><h2 class="ttl">¿Cómo se siente?</h2>${pills(TYPES,(i,o)=>ans.type.includes(o))}</div><div class="end"><button class="cta" id="nx">Siguiente</button></div>`;
   if(step===5)h=`<div class="body"><h2 class="ttl">¿Cuánto tiempo tienes?</h2><p class="lbl">Disciplina</p><div class="seg" id="dseg">${DISC.map(([v,n])=>`<button data-v="${v}" aria-pressed="${(ans.discipline||'hybrid')===v}">${n}</button>`).join('')}</div><p class="lbl">Duración</p>${pills(TIMES.map(t=>t[1]),i=>ans.time===i)}</div>`;
   L.innerHTML=h;L.scrollTop=0;
   if(step===0){$('go0').onclick=()=>{step=1;renderStep()};if($('same'))$('same').onclick=()=>{ans=prev.ans;finishCi()}}
   if(step===1)L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;ans.mood=+b.dataset.i;renderStep();setTimeout(()=>{step=2;renderStep()},260)};
   if(step===2){$('pr').oninput=e=>{ans.pain=+e.target.value;$('pv').textContent=ans.pain;$('pl').textContent=painLab(ans.pain)};$('nx').onclick=()=>{if(ans.pain===0){ans.where=[];step=4}else step=3;renderStep()}}
-  if(step===3){L.querySelector('.body').onclick=e=>{const b=e.target.closest('.kz,.pill');if(!b)return;const v=b.classList.contains('kz')?b.dataset.v:'Espalda baja',s=ans.where,i=s.indexOf(v);i<0?s.push(v):s.splice(i,1);b.setAttribute('aria-pressed',i<0)};
+  if(step===3){const tz=v=>{const s=ans.where,i=s.indexOf(v);i<0?s.push(v):s.splice(i,1);L.querySelectorAll('.kz').forEach(b=>b.setAttribute('aria-pressed',s.includes(b.dataset.v)));
+      if(K3){K3.set({sel:s});const z=K3.ZONES[v];$('kcap').textContent=z?(i<0?'Marcaste: ':'Quitaste: ')+z.label.toLowerCase():''}return i<0};
+    L.querySelector('.body').onclick=e=>{const b=e.target.closest('.kz,.pill');if(!b)return;if(b.classList.contains('kz'))tz(b.dataset.v);else{const s=ans.where,i=s.indexOf('Espalda baja');i<0?s.push('Espalda baja'):s.splice(i,1);b.setAttribute('aria-pressed',i<0)}};
+    k3().then(m=>{if(!m||step!==3||!$('kmap'))return;if(m.mount($('kmap'),{mode:'pick',sel:ans.where,angle:8,rotY:-1.2,onPick:tz})){$('kmap').classList.add('is3d');m.spin(-.45,1100)}});
     $('nx').onclick=()=>{step++;renderStep()}}
   if(step===4){const arr=TYPES,key='type';
     L.querySelector('.pills').onclick=e=>{const b=e.target.closest('.pill');if(!b)return;const v=arr[+b.dataset.i],s=ans[key],i=s.indexOf(v);i<0?s.push(v):s.splice(i,1);b.setAttribute('aria-pressed',i<0)};
@@ -926,6 +942,17 @@ $('redo').onclick=()=>{step=0;ans={mood:null,pain:ans.pain,where:[],type:[],time
 /* motor adaptativo */
 let mode='full',listen=false,Q=[],why='';
 const MODE={full:'completa',gentle:'suave',rest:'de descanso'};
+/* rodilla 3D: módulo WebGL cargado solo cuando se usa (vendor/knee3d.js); si falla, queda el dibujo 2D */
+let K3=null,K3p=null;
+const k3=()=>K3p||(K3p=(/^https?:/.test(location.protocol)&&window.WebGLRenderingContext?import('./vendor/knee3d.js'):Promise.reject()).then(m=>{K3=m;return m}).catch(()=>null));
+const K3HL={ext:['quad','ptend','pat'],flx:['ham','pat'],fza:['quad','pat','ptend'],edm:['bursa'],neu:['nerve','ham'],mov:['ham'],eq:['mcl','lcl','menM','menL']};
+const K3X={36:[['quad','pat']],37:[['quad','ptend'],['hoffa']],38:[['quad']],39:[['quad','pat']],40:[['ham']],41:[['quad','pat']],42:[['quad','ptend']],43:[['mcl','lcl','menM']]};
+const k3parts=k=>{const x=T[k],o=K3X[k];return o?{hl:o[0],pr:o[1]||[]}:{hl:K3HL[x.o]||[],pr:[]}};
+function k3deep(root){const el=root.querySelector('.k3deep');if(!el)return;const k=+el.dataset.k,{hl,pr}=k3parts(k);if(!hl.length)return;
+  k3().then(m=>{if(!m)return;const cap=root.querySelector('.k3cap');
+    const go=()=>{if(m.mount(el,{mode:'show',hl,angle:x3ang(k),rotY:-.55})){el.classList.add('on');if(cap)cap.textContent='Trabaja: '+hl.map(p=>m.PART_NAMES[p]).join(', ')+(pr.length?'. Protege: '+pr.map(p=>m.PART_NAMES[p]).join(', '):'')+'.'}};
+    el.classList.add('on');if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){go()}},{threshold:.2});io.observe(el)}else go()})}
+const x3ang=k=>{const o=T[k].o;return o==='flx'?95:o==='fza'?35:o==='ext'?2:15};
 let BLOCK=new Set();
 const off=k=>T[k].mind?false:BLOCK.has(k)?true:mode==='rest'?![0,14,29].includes(k):mode==='gentle'?!!T[k].l:false;
 function build(){
@@ -1016,7 +1043,10 @@ let cpm=0;
 function romInit(){const r=getRom(),t=new Date().toDateString(),last=r[r.length-1];
   if(last){$('rExt').value=last.ext;$('rFlx').value=last.flx}cpm=last&&new Date(last.d).toDateString()===t?+last.cpm||0:0;romSync()}
 function romSync(){$('rExtV').textContent=$('rExt').value+'°';$('rFlxV').textContent=$('rFlx').value+'°';$('rCpmV').textContent=cpm;romChart()}
-$('rExt').oninput=romSync;$('rFlx').oninput=romSync;
+let romView='flx';
+function rom3d(){const a=romView==='flx'?+$('rFlx').value:Math.max(0,+$('rExt').value),f=+$('rFlx').value;
+  if(K3)K3.set({angle:a});$('k3romCap').textContent=K3?(romView==='flx'?`Flexión ${f}° · metas 90° y 120°${f>=120?' ✓':''}`:`Extensión: te faltan ${$('rExt').value}° · meta 0°`)+' · gira la rodilla con el dedo':''}
+$('rExt').oninput=()=>{romView='ext';romSync();rom3d()};$('rFlx').oninput=()=>{romView='flx';romSync();rom3d()};
 $('rCpmM').onclick=()=>{cpm=Math.max(0,cpm-1);romSync()};$('rCpmP').onclick=()=>{cpm=Math.min(5,cpm+1);romSync()};
 $('rSave').onclick=()=>{const r=getRom(),ci=store.get('snry6-ci',null),a=ci&&ci.day===new Date().toDateString()?ci.ans:ans;
   r.push({d:new Date().toISOString(),ext:+$('rExt').value,flx:+$('rFlx').value,cpm,swelling:(a.where||[]).includes('Suprarrotuliana')&&(a.type||[]).includes('Hinchazón')?'suprapatellar':''});
@@ -1071,7 +1101,7 @@ $('tracks').onclick=e=>{const inf=e.target.closest('.info');if(inf){openFicha(+i
   closeSheet('lib');i<0?openPlayer([k],0,'Biblioteca'):openPlayer(list,i,flt==='all'?'Biblioteca':O[flt].n)};
 $('openLib').onclick=()=>{renderLib();openSheet('lib')};
 function fichaHTML(k,fig){const x=T[k],d=SK[k],o=O[x.o];
-  return (fig?`<div class="fi-fig">${washSVG(x.g,k,'','0 120 390 330')}${x.vis?visThumb(k,'0 120 390 330'):figSVG(k,true,'0 120 390 330')}</div>`:'')+`
+  return (fig?`<div class="fi-fig">${washSVG(x.g,k,'','0 120 390 330')}${x.vis?visThumb(k,'0 120 390 330'):figSVG(k,true,'0 120 390 330')}</div>`:'')+(k3parts(k).hl.length?`<div class="k3deep" data-k="${k}" aria-label="Rodilla 3D: estructuras que trabaja esta práctica"></div><p class="kcap k3cap" style="text-align:left;margin:0 0 10px"></p>`:'')+`
   <h2 class="fi-sa">${esc(d.sa)}</h2><p class="fi-es">${esc(x.d)}</p><p class="fi-int">${esc(x.it)}</p>
   ${d.p.length?`<h3 class="h3">El nombre</h3><dl class="fi-parts">${d.p.map(([a,b])=>`<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>`:''}
   <p class="fi-p">${esc(d.m)}</p>
@@ -1080,7 +1110,7 @@ function fichaHTML(k,fig){const x=T[k],d=SK[k],o=O[x.o];
   <h3 class="h3">Por qué funciona</h3><p class="fi-p">${esc(x.w)} ${o.s}</p>
   <dl class="spec"><dt>Objetivo</dt><dd>${o.n}${x.o2.length?' · '+x.o2.map(q=>O[q].n.toLowerCase()).join(', '):''}</dd><dt>Contracción</dt><dd>${esc(x.ct)}</dd>${x.ch!=='—'?`<dt>Cadena</dt><dd>${esc(x.ch)}</dd>`:''}<dt>Carga</dt><dd>${x.ld} de 3</dd><dt>Dosis</dt><dd>${esc(x.dose)}</dd></dl>
   <p class="disc">Regla del dolor: hasta 3/10 está bien si baja al terminar; si sube o sigue al día siguiente, reduce la carga.${x.f?' Esta práctica requiere el visto bueno de tu fisio.':''}</p>`}
-function openFicha(k){$('fiBody').innerHTML=fichaHTML(k,true);
+function openFicha(k){$('fiBody').innerHTML=fichaHTML(k,true);k3deep($('fiBody'));
   openSheet('ficha')}
 const BADGES=[['Primer paso','Tu primera sesión',s=>s.log.length>=1,'#d29b3a'],['Escuchaste a tu cuerpo','Bajaste la carga cuando dolió',s=>s.log.some(e=>e.listen),'#5b5a8a'],['Cuádriceps despierto','5 quad sets',s=>(s.done[1]||0)>=5,'#8c3b2f'],['Constancia amable','Meta semanal cumplida',s=>Object.values(s.weeks).some(n=>n>=goal),'#6b8f71'],['Calma profunda','3 Savasanas',s=>(s.done[29]||0)>=3,'#4d7a99'],['Cero grados','Extensión completa',s=>!!s.mi[0],'#e0603f'],['Raíces','Nivel Raíz',s=>s.lv>=2,'#8a6a45'],['Flor de loto','Último nivel',s=>s.lv>=5,'#d9a441']];
 const unlocked=s=>BADGES.filter(b=>b[2](s)).map(b=>b[0]);
@@ -1093,7 +1123,8 @@ function renderProg(){const s=stats(),cur=LV[s.lv],nx=LV[s.lv+1],pct=nx?(s.drops
   $('miles').innerHTML=MILES.map((m,i)=>`<button class="mile${s.mi[i]?' on':''}" data-i="${i}" aria-pressed="${!!s.mi[i]}"><span class="bx"></span><span><b>${m[0]}</b><span>${m[1]}${s.mi[i]?' · '+esc(new Date(s.mi[i]).toLocaleDateString('es-MX',{day:'numeric',month:'short'})):''}</span></span></button>`).join('');
   $('logrows').innerHTML=s.log.length?s.log.map(e=>`<div class="lrow"><span>${esc(new Date(e.d).toLocaleDateString('es-MX',{day:'numeric',month:'short'}))}<br><span class="small">${esc(e.mode)} · ${+e.m||0} min</span></span><div><div class="meter a"><i style="width:${(+e.before||0)*10}%"></i></div><div class="meter"><i style="width:${(+e.after||0)*10}%"></i></div></div><span class="num">${+e.before||0} → ${+e.after||0}</span></div>`).join(''):'<p class="sub">Aún no hay sesiones. Guarda una para regar tu loto.</p>'}
 function celebrate(before){unlocked(stats()).filter(b=>!before.includes(b)).forEach((b,i)=>setTimeout(()=>{toast('Nuevo logro: '+b);gong(196,3)},i*3400))}
-$('openProg').onclick=()=>{renderProg();romInit();openSheet('prog')};
+$('openProg').onclick=()=>{renderProg();romInit();openSheet('prog');romView='flx';
+  k3().then(m=>{if(!m)return;if(m.mount($('k3rom'),{mode:'rom',angle:0,rotY:-1.3})){m.spin(-1.05,700);setTimeout(()=>{m.animateAngle(+$('rFlx').value,1100);rom3d()},350);rom3d()}})};
 $('miles').onclick=e=>{const b=e.target.closest('.mile');if(!b)return;const bef=unlocked(stats()),mi=getMiles(),i=b.dataset.i;if(mi[i])delete mi[i];else{mi[i]=new Date().toISOString();toast('Hito alcanzado: +50 gotas')}store.set('snry6-miles',mi);renderProg();renderHome();celebrate(bef)};
 $('gMinus').onclick=()=>{goal=Math.max(1,goal-1);store.set('snry6-goal',goal);renderProg()};
 $('gPlus').onclick=()=>{goal=Math.min(7,goal+1);store.set('snry6-goal',goal);renderProg()};
@@ -1132,7 +1163,7 @@ function openPlayer(list,i,from){if(clinAlert()){toast('Temperatura ≥ 38 °C: 
   $('player').classList.add('on');$('finish').hidden=true;$('upnext').hidden=true;load();play()}
 const segs=()=>{$('psegs').innerHTML=PL.map(()=>'<i><b></b></i>').join('')};
 function closePlayer(){pause();musStop();hush();clearInterval(cdT);$('player').classList.remove('on');renderHome()}
-function load(){const x=cur();left=x.t;paint($('plArt'),x.g,x.k);$('plDeep').innerHTML=fichaHTML(x.k,false);$('player').scrollTop=0;hush();VG.need=true;VG.rel=false;
+function load(){const x=cur();left=x.t;paint($('plArt'),x.g,x.k);$('plDeep').innerHTML=fichaHTML(x.k,false);k3deep($('plDeep'));$('player').scrollTop=0;hush();VG.need=true;VG.rel=false;
   $('plName').textContent=x.n;$('plCue').textContent=x.sc;delete $('plCue').dataset.si;$('plInt').textContent=x.it;
   $('plMeta').innerHTML=`<span class="ob" style="--c:${O[x.o].c}"><i></i>${x.mind?x.kind:O[x.o].n}</span><span>${esc(x.mind?(x.d.split(' · ')[1]||''):x.d)}</span><span class="dose">${esc(x.dose)}</span>${x.f?'<span class="fl">fisio</span>':''}`;
   $('plCount').textContent=(qi+1)+'/'+PL.length;draw();if(run&&VG.on)narrate(x)}
